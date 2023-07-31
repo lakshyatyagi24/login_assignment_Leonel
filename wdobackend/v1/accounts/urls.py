@@ -1,0 +1,14 @@
+from django.conf.urls import url, include
+from rest_framework_jwt.views import obtain_jwt_token
+from v1.accounts.views import (
+	UserCreateView,
+	custom_register
+)
+
+app_name = 'accounts'
+
+urlpatterns = [
+	url(r'^register/$',UserCreateView.as_view(),name='accounts'),
+	url(r'^home/login/token/$',obtain_jwt_token),
+	url(r'^custom_register/$', custom_register, name='custom_register')
+]
