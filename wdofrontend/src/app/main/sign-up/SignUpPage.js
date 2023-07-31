@@ -1,11 +1,15 @@
+import * as React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import FormControl from '@mui/material/FormControl';
 import FormControlLabel from '@mui/material/FormControlLabel';
+import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
@@ -30,11 +34,13 @@ const schema = yup.object().shape({
   acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
 });
 
+
 const defaultValues = {
   displayName: '',
   email: '',
   password: '',
   passwordConfirm: '',
+  role: 'student',
   acceptTermsConditions: false,
 };
 
@@ -47,18 +53,26 @@ function SignUpPage() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
-  function onSubmit({ displayName, password, email }) {
+  const [role, setRole] = React.useState('');
+
+  const handleChange = (event) => {
+    setRole(event.target.value);
+  };
+
+  function onSubmit({ displayName, password, email, role }) {
     jwtService
       .createUser({
         displayName,
         password,
         email,
+        role
       })
       .then((user) => {
         // No need to do anything, registered user data will be set at app/auth/AuthContext
       })
       .catch((_errors) => {
         _errors.forEach((error) => {
+          console.log(error);
           setError(error.type, {
             type: 'manual',
             message: error.message,
@@ -159,6 +173,30 @@ function SignUpPage() {
                   required
                   fullWidth
                 />
+              )}
+            />
+
+            <Controller
+              name="role"
+              control={control}
+              render={({ field }) => (
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                  <InputLabel id="demo-simple-select-helper-label">Role</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    label="Role"
+                    className="mb-24"
+                    {...field}
+                  >
+                    <MenuItem value={'student'}>Student</MenuItem>
+                    <MenuItem value={'employee'}>Employee</MenuItem>
+                    <MenuItem value={'college'}>College</MenuItem>
+                    <MenuItem value={'institution'}>Institution</MenuItem>
+                    <MenuItem value={'admin'}>Admin</MenuItem>
+                    <MenuItem value={'superadmin'}>Super Admin</MenuItem>
+                  </Select>
+                </FormControl>
               )}
             />
 
