@@ -74,7 +74,7 @@ mock.onGet('/api/auth/access-token').reply((config) => {
 
 mock.onPost('/api/auth/sign-up').reply((request) => {
   const data = JSON.parse(request.data);
-  const { displayName, password, email } = data;
+  const { displayName, password, email, role } = data;
   const isEmailExists = usersApi.find((_user) => _user.data.email === email);
   const error = [];
 
@@ -90,7 +90,7 @@ mock.onPost('/api/auth/sign-up').reply((request) => {
       uuid: FuseUtils.generateGUID(),
       from: 'custom-db',
       password,
-      role: 'admin',
+      role: role,
       data: {
         displayName,
         photoURL: 'assets/images/avatars/Abbott.jpg',

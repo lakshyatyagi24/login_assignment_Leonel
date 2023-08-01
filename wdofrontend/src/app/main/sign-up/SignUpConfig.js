@@ -23,7 +23,7 @@ const SignUpConfig = {
       },
     },
   },
-  auth: authRoles.onlyGuest,
+  auth: authRoles.onlyguest,
   routes: [
     {
       path: 'sign-up',
