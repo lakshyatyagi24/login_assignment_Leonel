@@ -17,6 +17,7 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from v1.accounts.views import FacebookLogin
 from v1.accounts import views
+from django.views.generic.base import TemplateView
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -24,5 +25,7 @@ urlpatterns = [
     url(r'^accounts/api/',include('v1.accounts.urls')),
     url(r'^accounts/', include('allauth.urls')),
     url(r'^rest-auth/', include('rest_auth.urls')),
-    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login')
+    url(r'^rest-auth/facebook/$', FacebookLogin.as_view(), name='fb_login'),
+    url(r'^login/$', TemplateView.as_view(template_name="car/garage.html"), name='login'),
+    url(r"", TemplateView.as_view(template_name="home.html"), name="home"),
 ]

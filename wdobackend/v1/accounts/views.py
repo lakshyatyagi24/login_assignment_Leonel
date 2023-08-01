@@ -5,13 +5,14 @@ from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from rest_framework.permissions import (
 	AllowAny
 )
-from .forms import CustomUserCreationForm
-
 from v1.accounts.serializers import (
 	UserCreateSerializer,
 	UserSerializer,
 )
 from django.http import HttpResponse
+from django.http import HttpResponseBadRequest
+import json
+from django.http import JsonResponse
 
 User=get_user_model()
 
@@ -19,7 +20,6 @@ class UserCreateView(CreateAPIView):
 	queryset = User.objects.all()
 	serializer_class = UserCreateSerializer
 	permission_classes = (AllowAny, )
-
 
 def jwt_response_payload_handler(token, user=None, request=None):
     return {
@@ -32,10 +32,16 @@ class FacebookLogin(SocialLoginView):
 
 def custom_register(request):
 	if request.method == 'POST':
-		form = CustomUserCreationForm(request.POST)
-	if form.is_valid():
-		form.save()
-		return HttpResponse("Successfully registered to the server!")
-	else:
-		form = CustomUserCreationForm()
-	return HttpResponse("Registration has been failed!")
+		try:
+			data = json.loads(request.body)
+			email = data['email']
+			role = data['role']
+			password = data['password']
+			username = data['username']
+			user = User.objects.create_user(email=email, role=role, password=password, username=username)
+			user.save()
+			return HttpResponse('Registration has been failed!')
+		except Exception as e:
+			return JsonResponse({ 'error': str(e), 'status': 'error' }, status=500)
+
+	return HttpResponse('Registration has been failed!')

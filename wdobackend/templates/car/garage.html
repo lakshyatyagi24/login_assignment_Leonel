@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+   <head>
+      <title>Cars App</title>
+      <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+   </head>
+   <body style="background-color:#4DB6AC;">
+      <nav class="navbar navbar-light" style="background-color:#FF0033;">
+         <a href="{% url 'login' %}" class="navbar-brand" style="background-color:#FFCC33;color:#000000;border-width:10px;border-color:#FFCC33;border-style:solid;border-spacing:30px;border-radius: 5px;">Log Out</a>
+         <a class="navbar-link btn-lg" href="{% url 'index' %}" style="background-color:#FFCC33;color:#000000;">Hi {{ user.username }}!</a>
+         <a href="{% url 'admin:index' %}" class = 'navbar-link btn-lg' style="background-color:#FFCC33;color:#000000;">Admin</a>
+         <a href="{% url 'upload-car' %}" class="navbar-link btn-lg" style="background-color:#FFCC33;color:#000000;">Upload Cars</a>
+      </nav>
+      <br>
+      {% block content %}
+      <div class="card-columns">
+        {% if user.is_authenticated %}
+         {% for car in shelf %}
+         
+         <div class="card" style="width: 18rem;">
+            <div class="card-body">
+               <h5 class="card-title">{{ car.vNumber }}</h5>
+               <h5 class="card-body">{{ car.vType }} Wheels</h5>
+               <p class="card-text">{{ car.vModel }} Model</p>
+               <div class="card-footer bg-transparent border-dark">
+                  <p class="card-title">{{car.vDescription}}</p>
+                  <center>
+                     <a href="update/{{car.id}}" class="btn btn-warning" id = '{{car.id}}'>edit</a>
+                     <a href="delete/{{car.id}}" class="btn btn-danger" id = '{{car.id}}'>delete</a>
+                  </center>
+               </div>
+            </div>
+         </div>
+         {% endfor %}
+                    {% else %}
+            <p>You are not logged in</p>
+            <a href="{% url 'login' %}">Log In</a>
+            <br>
+            <a href="/users/signup">Sign up</a>
+            {% endif %}
+      </div>
+      {% endblock %}
+   </body>
+</html>

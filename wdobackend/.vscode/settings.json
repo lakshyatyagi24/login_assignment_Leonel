@@ -1,0 +1,6 @@
+{
+    "[python]": {
+        "editor.defaultFormatter": "mikoz.shed"
+    },
+    "python.formatting.provider": "none"
+}
