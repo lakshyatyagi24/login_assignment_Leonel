@@ -10,7 +10,7 @@ class UserAccountManager(BaseUserManager):
 
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-
+        user.is_active = 1
         user.set_password(password)
         user.save()
 
