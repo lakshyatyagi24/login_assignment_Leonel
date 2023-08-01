@@ -71,30 +71,30 @@ function SignUpPage() {
       email: email
     };
 
-    axios.post('/auth/users/', JSON.stringify(formData)).then(response => {
-      console.log(response);
-    }).catch(error => {
-      console.log(error);
-    })
-    // jwtService
-    //   .createUser({
-    //     firstName,
-    //     lastName,
-    //     password,
-    //     email,
-    //   })
-    //   .then((user) => {
-    //     // No need to do anything, registered user data will be set at app/auth/AuthContext
-    //   })
-    //   .catch((_errors) => {
-    //     _errors.forEach((error) => {
-    //       console.log(error);
-    //       setError(error.type, {
-    //         type: 'manual',
-    //         message: error.message,
-    //       });
-    //     });
-    //   });
+    // axios.post('/auth/users/', JSON.stringify(formData)).then(response => {
+    //   console.log(response);
+    // }).catch(error => {
+    //   console.log(error);
+    // })
+    jwtService
+      .createUser({
+        firstName,
+        lastName,
+        password,
+        email,
+      })
+      .then((user) => {
+        // No need to do anything, registered user data will be set at app/auth/AuthContext
+      })
+      .catch((_errors) => {
+        _errors.forEach((error) => {
+          console.log(error);
+          setError(error.type, {
+            type: 'manual',
+            message: error.message,
+          });
+        });
+      });
   }
 
   return (
