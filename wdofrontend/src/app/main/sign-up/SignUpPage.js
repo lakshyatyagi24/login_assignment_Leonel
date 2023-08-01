@@ -20,6 +20,8 @@ import Paper from '@mui/material/Paper';
 import FormHelperText from '@mui/material/FormHelperText';
 import jwtService from '../../auth/services/jwtService';
 
+import { DropzoneArea } from 'material-ui-dropzone';
+
 /**
  * Form Validation Schema
  */
@@ -41,6 +43,7 @@ const defaultValues = {
   password: '',
   passwordConfirm: '',
   role: 'student',
+  image: null,
   acceptTermsConditions: false,
 };
 
@@ -53,13 +56,8 @@ function SignUpPage() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
-  const [role, setRole] = React.useState('');
-
-  const handleChange = (event) => {
-    setRole(event.target.value);
-  };
-
-  function onSubmit({ displayName, password, email, role }) {
+  function onSubmit({ displayName, password, email, role, image }) {
+    console.log(image);
     jwtService
       .createUser({
         displayName,
@@ -201,6 +199,20 @@ function SignUpPage() {
             />
 
             <Controller
+              name="image"
+              control={control}
+              render={({ field }) => (
+                <DropzoneArea
+                  IconComponent={null}
+                  acceptedFiles={['image/*']}
+                  filesLimit={1}
+                  showPreviews={false}
+                  {...field}
+                />
+              )}
+            />
+
+            <Controller
               name="acceptTermsConditions"
               control={control}
               render={({ field }) => (
@@ -280,7 +292,7 @@ function SignUpPage() {
         <div className="z-10 relative w-full max-w-2xl">
           <div className="text-7xl font-bold leading-none text-gray-100">
             <div>Welcome to</div>
-            <div>our community</div>
+            <div>WDO Institution</div>
           </div>
           <div className="mt-24 text-lg tracking-tight leading-6 text-gray-400">
             Fuse helps developers to build organized and well coded dashboards full of beautiful and
