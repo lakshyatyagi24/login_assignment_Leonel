@@ -19,14 +19,16 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import FormHelperText from '@mui/material/FormHelperText';
 import jwtService from '../../auth/services/jwtService';
-
 import { DropzoneArea } from 'material-ui-dropzone';
+import axios from '../../../axios-order';
+import Cookies from 'js-cookie';
 
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  displayName: yup.string().required('You must enter display name'),
+  firstName: yup.string().required('You must enter First name'),
+  lastName: yup.string().required('You must enter Last name'),
   email: yup.string().email('You must enter a valid email').required('You must enter a email'),
   password: yup
     .string()
@@ -38,11 +40,11 @@ const schema = yup.object().shape({
 
 
 const defaultValues = {
-  displayName: '',
+  firstName: '',
+  lastName: '',
   email: '',
   password: '',
   passwordConfirm: '',
-  role: 'student',
   image: null,
   acceptTermsConditions: false,
 };
@@ -56,34 +58,50 @@ function SignUpPage() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
-  function onSubmit({ displayName, password, email, role, image }) {
-    console.log(image);
-    jwtService
-      .createUser({
-        displayName,
-        password,
-        email,
-        role
-      })
-      .then((user) => {
-        // No need to do anything, registered user data will be set at app/auth/AuthContext
-      })
-      .catch((_errors) => {
-        _errors.forEach((error) => {
-          console.log(error);
-          setError(error.type, {
-            type: 'manual',
-            message: error.message,
-          });
-        });
-      });
+  function onSubmit({ firstName, lastName, password, email }) {
+    const csrfToken = Cookies.get('csrftoken');
+
+    console.log(firstName, lastName, password, email);
+
+    let formData = {
+      first_name: firstName,
+      last_name: lastName,
+      password: password,
+      re_password: password,
+      email: email
+    };
+
+    axios.post('/auth/users/', JSON.stringify(formData)).then(response => {
+      console.log(response);
+    }).catch(error => {
+      console.log(error);
+    })
+    // jwtService
+    //   .createUser({
+    //     firstName,
+    //     lastName,
+    //     password,
+    //     email,
+    //   })
+    //   .then((user) => {
+    //     // No need to do anything, registered user data will be set at app/auth/AuthContext
+    //   })
+    //   .catch((_errors) => {
+    //     _errors.forEach((error) => {
+    //       console.log(error);
+    //       setError(error.type, {
+    //         type: 'manual',
+    //         message: error.message,
+    //       });
+    //     });
+    //   });
   }
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
-          <img className="w-48" src="assets/images/logo/logo.svg" alt="logo" />
+          <img className="w-100" src="assets/images/logo/wdo-logo01.png" alt="logo" />
 
           <Typography className="mt-32 text-4xl font-extrabold tracking-tight leading-tight">
             Sign up
@@ -102,24 +120,41 @@ function SignUpPage() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <Controller
-              name="displayName"
+              name="firstName"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Display name"
+                  label="First name"
                   autoFocus
                   type="name"
-                  error={!!errors.displayName}
-                  helperText={errors?.displayName?.message}
+                  error={!!errors.firstName}
+                  helperText={errors?.firstName?.message}
                   variant="outlined"
                   required
                   fullWidth
                 />
               )}
             />
-
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Last name"
+                  autoFocus
+                  type="name"
+                  error={!!errors.lastName}
+                  helperText={errors?.lastName?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
             <Controller
               name="email"
               control={control}
@@ -175,44 +210,6 @@ function SignUpPage() {
             />
 
             <Controller
-              name="role"
-              control={control}
-              render={({ field }) => (
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="demo-simple-select-helper-label">Role</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    label="Role"
-                    className="mb-24"
-                    {...field}
-                  >
-                    <MenuItem value={'student'}>Student</MenuItem>
-                    <MenuItem value={'employee'}>Employee</MenuItem>
-                    <MenuItem value={'college'}>College</MenuItem>
-                    <MenuItem value={'institution'}>Institution</MenuItem>
-                    <MenuItem value={'admin'}>Admin</MenuItem>
-                    <MenuItem value={'superadmin'}>Super Admin</MenuItem>
-                  </Select>
-                </FormControl>
-              )}
-            />
-
-            <Controller
-              name="image"
-              control={control}
-              render={({ field }) => (
-                <DropzoneArea
-                  IconComponent={null}
-                  acceptedFiles={['image/*']}
-                  filesLimit={1}
-                  showPreviews={false}
-                  {...field}
-                />
-              )}
-            />
-
-            <Controller
               name="acceptTermsConditions"
               control={control}
               render={({ field }) => (
@@ -238,8 +235,16 @@ function SignUpPage() {
               Create your free account
             </Button>
           </form>
+          <div className="flex items-center mt-32">
+            <div className="flex-auto mt-px border-t" />
+            <Typography className="mx-8" color="text.secondary">
+              Or continue with
+            </Typography>
+            <div className="flex-auto mt-px border-t" />
+          </div>
         </div>
       </Paper>
+
 
       <Box
         className="relative hidden md:flex flex-auto items-center justify-center h-full p-64 lg:px-112 overflow-hidden"
@@ -295,8 +300,7 @@ function SignUpPage() {
             <div>WDO Institution</div>
           </div>
           <div className="mt-24 text-lg tracking-tight leading-6 text-gray-400">
-            Fuse helps developers to build organized and well coded dashboards full of beautiful and
-            rich modules. Join us and start building your application today.
+            WDO Institution which stands for World Development Opportunities Institution, is a National institution promoting education's role in driving overall development.We offer free education and counseling services for 10th, 11th, and 12th students through video classes for TBSE and CBSE boards. Additionally, we have future plans for including classes from 1st to 9th grade and preparing students for various Government exams like UPSC, State Government Exam, and providing spoken English courses. We believe every student, regardless of their background, should be educated.
           </div>
           <div className="flex items-center mt-32">
             <AvatarGroup

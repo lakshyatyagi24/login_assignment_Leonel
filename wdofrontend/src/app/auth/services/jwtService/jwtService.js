@@ -64,17 +64,16 @@ class JwtService extends FuseUtils.EventEmitter {
   signInWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
       axios
-        .get(jwtServiceConfig.signIn, {
-          data: {
-            email,
-            password,
-          },
+        .post(jwtServiceConfig.signIn, {
+          email,
+          password,
         })
         .then((response) => {
-          if (response.data.user) {
-            this.setSession(response.data.access_token);
-            resolve(response.data.user);
-            this.emit('onLogin', response.data.user);
+          console.log(response);
+          if (response.data.access) {
+            this.setSession(response.data.access);
+            resolve(response.data.access);
+            this.emit('onLogin', response.data.access);
           } else {
             reject(response.data.error);
           }
@@ -92,7 +91,7 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           if (response.data.user) {
-            this.setSession(response.data.access_token);
+            this.setSession(response.data.access);
             resolve(response.data.user);
           } else {
             this.logout();

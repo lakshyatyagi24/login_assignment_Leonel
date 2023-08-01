@@ -16,6 +16,7 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
 import jwtService from '../../auth/services/jwtService';
+import axios from 'axios';
 
 /**
  * Form Validation Schema
@@ -49,6 +50,11 @@ function SignInPage() {
   }, [setValue]);
 
   function onSubmit({ email, password }) {
+    // axios.post('/auth/jwt/create/', { email, password }).then(response => {
+    //   console.log(response);
+    // }).catch(error => {
+    //   console.log(error);
+    // })
     jwtService
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
@@ -237,8 +243,7 @@ function SignInPage() {
             <div>WDO Institution</div>
           </div>
           <div className="mt-24 text-lg tracking-tight leading-6 text-gray-400">
-            Fuse helps developers to build organized and well coded dashboards full of beautiful and
-            rich modules. Join us and start building your application today.
+            WDO Institution which stands for World Development Opportunities Institution, is a National institution promoting education's role in driving overall development.We offer free education and counseling services for 10th, 11th, and 12th students through video classes for TBSE and CBSE boards. Additionally, we have future plans for including classes from 1st to 9th grade and preparing students for various Government exams like UPSC, State Government Exam, and providing spoken English courses. We believe every student, regardless of their background, should be educated.
           </div>
           <div className="flex items-center mt-32">
             <AvatarGroup

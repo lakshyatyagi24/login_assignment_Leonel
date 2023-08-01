@@ -1,6 +1,7 @@
 const path = require(`path`);
 const alias = require(`./aliases`);
 const { aliasWebpack } = require('react-app-alias');
+const dotenv = require('dotenv');
 
 const SRC = `./src`;
 const aliases = alias(SRC);
@@ -14,6 +15,9 @@ const options = {
 };
 
 module.exports = function override(config) {
+  dotenv.config();
+
+  console.log(process.env.REACT_APP_API_URL);
   config.ignoreWarnings = [{ message: /Failed to parse source map/ }];
 
   return aliasWebpack(options)(config);
