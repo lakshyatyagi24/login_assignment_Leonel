@@ -35,6 +35,11 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
 
+    def to_dict(self):
+        return {
+            role: self.role
+        }
+
     def get_full_name(self):
         return self.first_name + self.last_name
 
