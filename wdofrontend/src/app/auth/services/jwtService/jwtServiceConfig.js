@@ -5,7 +5,7 @@ const jwtServiceConfig = {
   updateUser: 'api/auth/user/update',
   refreshToken: 'api/auth/jwt/refresh/',
   verifyToken: 'api/auth/jwt/verify/',
-  getMe: 'api/auth/users/me/'
+  getCurrentUser: 'api/account/current_user/'
 };
 
 export default jwtServiceConfig;

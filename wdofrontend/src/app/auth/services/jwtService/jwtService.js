@@ -57,14 +57,14 @@ class JwtService extends FuseUtils.EventEmitter {
           this.setSession(this.getAccessToken());
 
           axios
-            .get(jwtServiceConfig.getMe)
-              .then((response) => {
-                this.emit('onLogin', response.data);
-              })
-              .catch((error) => {
-                this.logout();
-                reject(new Error('Failed to get user data.'));
-              })
+            .get(jwtServiceConfig.getCurrentUser)
+            .then((response) => {
+              this.emit('onLogin', response.data);
+            })
+            .catch((error) => {
+              this.logout();
+              reject(new Error('Failed to get user data.'));
+            })
         } else {
           reject(response.data.error);
         }
@@ -80,22 +80,39 @@ class JwtService extends FuseUtils.EventEmitter {
           password,
         })
         .then((response) => {
-          console.log("signin data----------------", response.data);
+          var access_token = "";
           if (response.data.access) {
-            this.setSession(response.data.access);
-            resolve(response.data.access);
-
-            axios
-            .get(jwtServiceConfig.getMe)
+            access_token = response.data.access;
+            this.setSession(access_token);
+            axios.get(jwtServiceConfig.getCurrentUser)
               .then((response) => {
-                this.emit('onLogin', response.data);
+                var user = {};
+                user = {
+                  "data": {
+                    "displayName": response.data.first_name + " " + response.data.last_name,
+                    "email": response.data.email,
+                    "photoUrl": "assets/images/avatars/brain-hughes.jpg",
+                    "settings": {
+                      "layout": {},
+                      "theme": {}
+                    },
+                    "shortcuts": [
+                      "apps.calendar",
+                      "apps.mailbox",
+                      "apps.contacts"
+                    ]
+                  },
+                  "from": "wdoinstitution",
+                  "role": response.data.role,
+                  "uuid": access_token.user_id
+                }
+                resolve(user);
+                this.emit('onLogin', user);
               })
               .catch((error) => {
                 this.logout();
                 reject(new Error('Failed to get user data.'));
               })
-          } else {
-            reject(response.data.error);
           }
         });
     });
@@ -108,17 +125,40 @@ class JwtService extends FuseUtils.EventEmitter {
           token: this.getAccessToken(),
         })
         .then((response) => {
+          var access_token = "";
+          access_token = this.getAccessToken();
           this.setSession(this.getAccessToken());
 
           axios
-            .get(jwtServiceConfig.getMe)
-              .then((response) => {
-                resolve(response.data);
-              })
-              .catch((error) => {
-                this.logout();
-                reject(new Error('Failed to login with token.'));
-              })
+            .get(jwtServiceConfig.getCurrentUser)
+            .then((response) => {
+              var user = {};
+              console.log(response.data);
+              user = {
+                "data": {
+                  "displayName": response.data.first_name + " " + response.data.last_name,
+                  "email": response.data.email,
+                  "photoUrl": "assets/images/avatars/brain-hughes.jpg",
+                  "settings": {
+                    "layout": {},
+                    "theme": {}
+                  },
+                  "shortcuts": [
+                    "apps.calendar",
+                    "apps.mailbox",
+                    "apps.contacts"
+                  ]
+                },
+                "from": "wdoinstitution",
+                "role": response.data.role,
+                "uuid": access_token.user_id
+              }
+              resolve(user);
+            })
+            .catch((error) => {
+              this.logout();
+              reject(new Error('Failed to login with token.'));
+            })
         })
         .catch((error) => {
           this.logout();
