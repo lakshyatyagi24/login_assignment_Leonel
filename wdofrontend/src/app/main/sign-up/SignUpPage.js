@@ -78,10 +78,11 @@ function SignUpPage() {
     // })
     jwtService
       .createUser({
-        firstName,
-        lastName,
-        password,
-        email,
+        first_name: firstName,
+        last_name: lastName,
+        password: password,
+        re_password: password,
+        email: email
       })
       .then((user) => {
         // No need to do anything, registered user data will be set at app/auth/AuthContext
