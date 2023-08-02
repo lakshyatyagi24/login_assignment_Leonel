@@ -40,7 +40,8 @@ function UserNavbarHeader(props) {
           src={user.data.photoURL}
           alt={user.data.displayName}
         >
-          {user.data.displayName.charAt(0)}
+          {/* {user.data.displayName.charAt(0)} */}
+          {user.data.role}
         </Avatar>
       </div>
       <Typography className="username text-14 whitespace-nowrap font-medium">

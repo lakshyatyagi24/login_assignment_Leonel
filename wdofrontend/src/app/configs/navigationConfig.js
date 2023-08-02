@@ -13,7 +13,7 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 const navigationConfig = [
   {
     id: 'dashboards student',
-    title: 'Student Dashboards',
+    title: 'Student Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
@@ -37,7 +37,7 @@ const navigationConfig = [
   },
   {
     id: 'dashboards employee',
-    title: 'Employee Dashboards',
+    title: 'Employee Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
@@ -61,7 +61,7 @@ const navigationConfig = [
   },
   {
     id: 'dashboards admin',
-    title: 'Admin Dashboards',
+    title: 'Admin Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
@@ -85,7 +85,7 @@ const navigationConfig = [
   },
   {
     id: 'dashboards superadmin',
-    title: 'Superadmin Dashboards',
+    title: 'Superadmin Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
