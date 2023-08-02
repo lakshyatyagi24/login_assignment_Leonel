@@ -37,7 +37,7 @@ function NavbarStyle1Content(props) {
     <Root className={clsx('flex flex-auto flex-col overflow-hidden h-full', props.className)}>
       <div className="flex flex-row items-center shrink-0 h-48 md:h-72 px-20">
         <div className="flex flex-1 mx-4">
-          <Logo />
+          <img className="w-100" src="assets/images/logo/wdo-logo01.png" alt="logo" />
         </div>
 
         <NavbarToggleButton className="w-40 h-40 p-0" />

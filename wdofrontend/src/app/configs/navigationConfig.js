@@ -69,17 +69,17 @@ const navigationConfig = [
     children: [
       {
         id: 'dashboards.project',
-        title: 'Dashboard 1',
+        title: 'Dashboard',
         type: 'item',
         icon: 'heroicons-outline:clipboard-check',
         url: '/dashboards/project',
       },
       {
-        id: 'dashboards.analytics',
-        title: 'Dashboard 2',
+        id: 'dashboards.settings',
+        title: 'Setting',
         type: 'item',
-        icon: 'heroicons-outline:chart-pie',
-        url: '/dashboards/analytics',
+        icon: 'heroicons-outline:briefcase',
+        url: '/apps/settings',
       },
     ],
   },
