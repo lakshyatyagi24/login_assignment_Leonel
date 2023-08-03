@@ -2,15 +2,24 @@
  * Authorization Roles
  */
 const authRoles = {
-  superadmin: ['superadmin'],
-  admin: ['admin', 'superadmin'],
-  employee: ['employee','admin', 'superadmin'],
-  student: ['student','admin', 'superadmin'],
-  guest: ['student', 'employee', 'admin', 'superadmin'],
+  boss: ['boss'],
+  ceo: ['ceo', 'boss'],
+  superadmin: ['superadmin', 'ceo', 'boss'],
+  admin: ['admin', 'superadmin', 'ceo', 'boss'],
+  manager: [ 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  teamleader: ['teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  employee: ['employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  teacher: ['teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  others: ['others','teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  onlyboss: ['boss'],
+  onlyceo: ['ceo'],
   onlysuperadmin: ['superadmin'],
   onlyadmin: ['admin'],
+  onlymanager: [ 'manager'],
+  onlyteamleader: ['teamleader'],
   onlyemployee: ['employee'],
-  onlystudent: ['student'],
+  onlyteacher: ['teacher'],
+  onlyothers: ['others'],
   onlyguest: [],
 };
 
