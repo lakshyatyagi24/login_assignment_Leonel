@@ -90,42 +90,6 @@ function ProjectDashboardAppHeader(props) {
           </Button>
         </div>
       </div>
-      <div className="flex items-center">
-        <Button
-          onClick={handleOpenProjectMenu}
-          className="flex items-center border border-solid border-b-0 rounded-t-xl rounded-b-0 h-40 px-16 text-13 sm:text-16"
-          variant="default"
-          sx={{
-            backgroundColor: (theme) => theme.palette.background.default,
-            borderColor: (theme) => theme.palette.divider,
-          }}
-          endIcon={
-            <FuseSvgIcon size={20} color="action">
-              heroicons-solid:chevron-down
-            </FuseSvgIcon>
-          }
-        >
-          {_.find(projects, ['id', selectedProject.id]).name}
-        </Button>
-        <Menu
-          id="project-menu"
-          anchorEl={selectedProject.menuEl}
-          open={Boolean(selectedProject.menuEl)}
-          onClose={handleCloseProjectMenu}
-        >
-          {projects &&
-            projects.map((project) => (
-              <MenuItem
-                key={project.id}
-                onClick={(ev) => {
-                  handleChangeProject(project.id);
-                }}
-              >
-                {project.name}
-              </MenuItem>
-            ))}
-        </Menu>
-      </div>
     </div>
   );
 }
