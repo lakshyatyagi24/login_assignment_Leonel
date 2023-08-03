@@ -107,6 +107,30 @@ const navigationConfig = [
       },
     ],
   },
+  {
+    id: 'User Management',
+    title: 'User Management',
+    //subtitle: 'Unique dashboard designs',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    auth: authRoles.student,
+    children: [
+      {
+        id: 'Create User',
+        title: 'Create a New User',
+        type: 'item',
+        icon: 'heroicons-outline:clipboard-check',
+        url: '/apps/user/create-new-user',
+      },
+      {
+        id: 'All User',
+        title: 'All User',
+        type: 'item',
+        icon: 'heroicons-outline:chart-pie',
+        url: '/apps/user/get-all-user',
+      },
+    ],
+  },
   // {
   //   id: 'apps',
   //   title: 'Applications',

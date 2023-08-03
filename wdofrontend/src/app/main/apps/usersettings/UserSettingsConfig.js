@@ -1,8 +1,6 @@
-import i18next from 'i18next';
 import { lazy } from 'react';
-import { Navigate } from 'react-router-dom';
 
-const UserSetting = lazy(() => import('./UserSettings'));
+const AdminSettings = lazy(() => import('./pages/AdminSettings'));
 
 const UserSettingsConfig = {
   settings: {
@@ -11,6 +9,7 @@ const UserSettingsConfig = {
   routes: [
     {
       path: '/apps/settings',
+      element: <AdminSettings />
     },
   ],
 };
