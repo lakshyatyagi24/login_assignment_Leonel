@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
-
     'accounts.apps.AccountsConfig',
 ]
 
@@ -151,6 +150,9 @@ STATICFILES_DIRS = [
     BASE_DIR / "build/static",
 ]
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+MEDIA_URL = "assets/"
+MEDIA_ROOT = BASE_DIR / "build/assets"
 
 
 REST_FRAMEWORK = {
