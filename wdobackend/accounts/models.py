@@ -236,11 +236,11 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     role = models.CharField(max_length=255)
     status = models.CharField(max_length=255)
 
-    personal_details = models.OneToOneField(UserPersonalDetails, on_delete=models.CASCADE)
-    qualification_details = models.OneToOneField(UserQualification, on_delete=models.CASCADE)
-    address = models.OneToOneField(UserAddress, on_delete=models.CASCADE)
+    personal_details = models.OneToOneField(UserPersonalDetails, on_delete=models.CASCADE, null=True)
+    qualification_details = models.OneToOneField(UserQualification, on_delete=models.CASCADE, null=True)
+    address = models.OneToOneField(UserAddress, on_delete=models.CASCADE, null=True)
     # Here is the user experience fields
-    document_upload = models.OneToOneField(UserDocuments, on_delete=models.CASCADE)
+    document_upload = models.OneToOneField(UserDocuments, on_delete=models.CASCADE, null=True)
 
     objects = UserAccountManager()
 
@@ -251,10 +251,18 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         # perform any additional logic or validations here, if needed
 
         # save the related fields
-        self.personal_details.save()
-        self.qualification_details.save()
-        self.address.save()
-        self.document_upload.save()
+        if self.personal_details is not None:
+            self.personal_details.save()
+        if self.qualification_details is not None:
+            self.qualification_details.save()
+        if self.address is not None:
+            self.address.save()
+        if self.document_upload is not None:
+            self.document_upload.save()
+        if self.role is None:
+            self.role = 'admin'
+        if self.is_active == 0:
+            self.is_active = 1
 
         # call the parent class's save method
         super().save(*args, **kwargs)
