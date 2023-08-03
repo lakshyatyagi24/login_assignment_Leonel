@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
+
+SECRET_KEY = 'LK@#JLKWJEF98s9df(*DSFLKJSDF)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -93,23 +94,21 @@ WSGI_APPLICATION = "auth_system.wsgi.application"
 # password = 'Fer@12345678'
 # database = 'fern08999$wdoinstitution'
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': database,
-#         'USER': username,
-#         'PASSWORD': password,
-#         'HOST': host,
-#     }
-# }
+host = 'localhost'
+username = 'root'
+password = ''
+database = 'wdoinstitution'
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
+        'NAME': database,
+        'USER': username,
+        'PASSWORD': password,
+        'HOST': host,
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        },
     }
 }
 
@@ -119,8 +118,8 @@ DATABASES = {
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "sandbox.smtp.mailtrap.io"
 EMAIL_PORT = 2525
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_HOST_USER = '904cb205f6d1df'
+EMAIL_HOST_PASSWORD = '85f321aecc0902'
 EMAIL_USE_TLS = True
 
 
@@ -193,8 +192,8 @@ SIMPLE_JWT = {
 
 
 # Will be used on email templates sent to users
-DOMAIN = os.environ.get("DOMAIN")
-SITE_NAME = os.environ.get("SITE_NAME")
+DOMAIN = 'localhost:8000'
+SITE_NAME = 'Auth System'
 
 
 DJOSER = {
@@ -220,9 +219,9 @@ DJOSER = {
 
 }
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get(
-    'SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '489463969400-p3i599gq4agp9jup4i2cv418788n4aih.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/userinfo.email',
     'https://www.googleapis.com/auth/userinfo.profile',
@@ -230,8 +229,8 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
 ]
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
 
-SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
-SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_KEY = '489463969400-p3i599gq4agp9jup4i2cv418788n4aih.apps.googleusercontent.com'
+SOCIAL_AUTH_FACEBOOK_SECRET = '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'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'email, first_name, last_name'
