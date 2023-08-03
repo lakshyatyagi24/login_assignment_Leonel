@@ -12,12 +12,12 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 
 const navigationConfig = [
   {
-    id: 'dashboards student',
-    title: 'Student Dashboard',
+    id: 'dashboards others',
+    title: 'Others Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
-    auth: authRoles.onlystudent,
+    auth: authRoles.onlyothers,
     children: [
       {
         id: 'dashboards.project',
@@ -25,23 +25,16 @@ const navigationConfig = [
         type: 'item',
         icon: 'heroicons-outline:clipboard-check',
         url: '/dashboards/project',
-      },
-      // {
-      //   id: 'dashboards.analytics',
-      //   title: 'Dashboard 2',
-      //   type: 'item',
-      //   icon: 'heroicons-outline:chart-pie',
-      //   url: '/dashboards/analytics',
-      // },
+      }
     ],
   },
   {
-    id: 'dashboards employee',
-    title: 'Employee Dashboard',
+    id: 'dashboards teacher',
+    title: 'Teacher Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
-    auth: authRoles.onlyemployee,
+    auth: authRoles.onlyteacher,
     children: [
       {
         id: 'dashboards.project',
