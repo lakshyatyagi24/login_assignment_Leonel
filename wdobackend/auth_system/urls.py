@@ -6,11 +6,11 @@ from django.conf import settings
 from . import views
 
 urlpatterns = [
+    path('api/account/', include('accounts.urls')),
     path('.well-known/<verification_file>', views.domain_verification),
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),
-    path('api/auth/', include('djoser.social.urls')),
-    path('api/account/', include('accounts.urls'))
+    path('api/auth/', include('djoser.social.urls'))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
