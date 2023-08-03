@@ -16,3 +16,8 @@ def get_current_user(request):
         'last_name': user.last_name,
         'role': user.role
     })
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_custom_user(request):
+    return JsonResponse("Successfully extracted")
