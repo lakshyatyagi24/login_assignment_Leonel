@@ -28,7 +28,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", get_random_secret_key())
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fern08999.pythonanywhere.com']
 
 
 # Application definition
@@ -89,14 +89,18 @@ WSGI_APPLICATION = "auth_system.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+host = 'fern08999.mysql.pythonanywhere-services.com'
+username = 'fern08999'
+password = 'Fer@12345678'
+database = 'fern08999$wdoinstitution'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+        'NAME': database,
+        'USER': username,
+        'PASSWORD': password,
+        'HOST': host,
     }
 }
 
@@ -104,8 +108,8 @@ DATABASES = {
 # EMAIL_HOST_PASSWORD: letmein1234 -> App Password in 2-step Authentication
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = 587
+EMAIL_HOST = "sandbox.smtp.mailtrap.io"
+EMAIL_PORT = 2525
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
