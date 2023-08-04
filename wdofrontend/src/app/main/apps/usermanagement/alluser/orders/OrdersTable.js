@@ -138,7 +138,7 @@ function OrdersTable(props) {
             onMenuItemClick={handleDeselect}
           />
 
-          <TableBody>
+          {/* <TableBody>
             {_.orderBy(
               data,
               [
@@ -217,7 +217,7 @@ function OrdersTable(props) {
                   </TableRow>
                 );
               })}
-          </TableBody>
+          </TableBody> */}
         </Table>
       </FuseScrollbars>
 

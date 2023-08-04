@@ -19,7 +19,7 @@ function OrdersHeader(props) {
         delay={300}
         className="flex text-24 md:text-32 font-extrabold tracking-tight"
       >
-        Orders
+        All Users
       </Typography>
 
       <div className="flex flex-1 items-center justify-end space-x-8 w-full sm:w-auto">
@@ -38,7 +38,7 @@ function OrdersHeader(props) {
             fullWidth
             value={searchText}
             inputProps={{
-              'aria-label': 'Search Orders',
+              'aria-label': 'Search Users',
             }}
             onChange={(ev) => dispatch(setOrdersSearchText(ev))}
           />

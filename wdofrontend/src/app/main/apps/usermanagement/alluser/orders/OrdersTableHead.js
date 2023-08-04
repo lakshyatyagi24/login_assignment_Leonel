@@ -26,47 +26,40 @@ const rows = [
     sort: true,
   },
   {
-    id: 'reference',
+    id: 'user_name',
     align: 'left',
     disablePadding: false,
-    label: 'Reference',
+    label: 'Username',
     sort: true,
   },
   {
-    id: 'customer',
+    id: 'email',
     align: 'left',
     disablePadding: false,
-    label: 'Customer',
+    label: 'Email Address',
     sort: true,
   },
   {
-    id: 'total',
+    id: 'date_created',
     align: 'right',
     disablePadding: false,
-    label: 'Total',
+    label: 'Date Created',
     sort: true,
   },
   {
-    id: 'payment',
+    id: 'user_status',
     align: 'left',
     disablePadding: false,
-    label: 'Payment',
+    label: 'User Status',
     sort: true,
   },
   {
-    id: 'status',
+    id: 'user_role',
     align: 'left',
     disablePadding: false,
-    label: 'Status',
+    label: 'Role',
     sort: true,
-  },
-  {
-    id: 'date',
-    align: 'left',
-    disablePadding: false,
-    label: 'Date',
-    sort: true,
-  },
+  }
 ];
 
 function OrdersTableHead(props) {
