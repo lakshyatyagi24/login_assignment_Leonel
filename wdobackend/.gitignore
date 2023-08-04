@@ -10,5 +10,3 @@ __pycache__/
 .pythonstartup.py
 .vimrc
 README.txt
-
-/build
