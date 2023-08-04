@@ -4,11 +4,7 @@ import Hidden from '@mui/material/Hidden';
 import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
-import withReducer from 'app/store/withReducer';
-import { useEffect, useRef, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
-import { useDeepCompareEffect } from '@fuse/hooks';
+import { useRef, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
 import { Step, StepContent, StepLabel } from '@mui/material';
 import Divider from '@mui/material/Divider';
@@ -18,13 +14,17 @@ import ButtonGroup from '@mui/material/ButtonGroup';
 import Typography from '@mui/material/Typography';
 import { Box } from '@mui/system';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
-import reducer from './store';
-import { getCourse, selectCourse, updateCourse } from './store/courseSlice';
 import StepInfo from './StepInfo';
 import CreateUserProgress from './CreateUserProgress';
 
+import Page1 from './subpages/Page1';
+import Page2 from './subpages/Page2';
+import Page3 from './subpages/Page3';
+import Page4 from './subpages/Page4';
+import Page5 from './subpages/Page5';
+
 function CreateUser() {
-  const usersteps = {
+  const [usersteps, setSteps] = useState({
     title: "Create A New User",
     steps: [
       { order: 0, title: 'Personal Details', subtitle: 'Enter your Personal details' },
@@ -33,91 +33,121 @@ function CreateUser() {
       { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' },
       { order: 4, title: 'Document Upload', subtitle: 'Enter your Document upload' },
     ],
-    progress: {
-      completed: 0,
-      currentStep: 1,
-    },
+    currentStep: 1,
     totalSteps: 5,
-
-  }
-  //   const dispatch = useDispatch();
-  //   const course = useSelector(selectCourse);
+  });
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
   const theme = useTheme();
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(!isMobile);
-  //   const routeParams = useParams();
-  //   const { courseId } = routeParams;
   const pageLayout = useRef(null);
+  const currentStep = usersteps.currentStep;
 
-  //   useDeepCompareEffect(() => {
-  //     /**
-  //      * Get the Course Data
-  //      */
-  //     dispatch(getCourse(courseId));
-  //   }, [dispatch, routeParams]);
+  function updateCurrentStep(index) {
+    if (index > usersteps.totalSteps || index <= 0) {
+      return;
+    }
+    setSteps(prevState => (
+      {
+        ...prevState,
+        currentStep: index
+      }));
+  }
 
-  //   useEffect(() => {
-  //     /**
-  //      * If the course is opened for the first time
-  //      * Change ActiveStep to 1
-  //      */
-  //     if (course && course.progress.currentStep === 0) {
-  //       dispatch(updateCourse({ progress: { currentStep: 1 } }));
-  //     }
-  //   }, [dispatch, course]);
+  function handleNext() {
+    updateCurrentStep(currentStep + 1);
+  }
 
-  //   useEffect(() => {
-  //     setLeftSidebarOpen(!isMobile);
-  //   }, [isMobile]);
+  function handleBack() {
+    updateCurrentStep(currentStep - 1);
+  }
 
-  //   if (!course) {
-  //     return null;
-  //   }
-
-  const { currentStep } = usersteps.progress;
-
-  //   function updateCurrentStep(index) {
-  //     if (index > course.totalSteps || index < 0) {
-  //       return;
-  //     }
-  //     dispatch(updateCourse({ progress: { currentStep: index } }));
-  //   }
-
-  //   function handleNext() {
-  //     updateCurrentStep(currentStep + 1);
-  //   }
-
-  //   function handleBack() {
-  //     updateCurrentStep(currentStep - 1);
-  //   }
-
-  //   function handleStepChange(index) {
-  //     updateCurrentStep(index + 1);
-  //   }
+  function handleStepChange(index) {
+    updateCurrentStep(index + 1);
+  }
 
   const activeStep = currentStep !== 0 ? currentStep : 1;
+
+  let mainContent = null;
+
+  console.log(usersteps.currentStep);
+
+  switch (usersteps.currentStep) {
+    case 1:
+      mainContent = (<div
+        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
+      >
+        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
+          <div
+            className="prose prose-sm dark:prose-invert w-full max-w-full"
+            dir={theme.direction}
+          />
+          <Page1 />
+        </Paper>
+      </div>);
+      break;
+    case 2:
+      mainContent = (<div
+        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
+      >
+        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
+          <div
+            className="prose prose-sm dark:prose-invert w-full max-w-full"
+            dir={theme.direction}
+          />
+          <Page2 />
+        </Paper>
+      </div>);
+      break;
+    case 3:
+      mainContent = (<div
+        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
+      >
+        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
+          <div
+            className="prose prose-sm dark:prose-invert w-full max-w-full"
+            dir={theme.direction}
+          />
+          <Page3 />
+        </Paper>
+      </div>);
+      break;
+    case 4:
+      mainContent = (<div
+        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
+      >
+        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
+          <div
+            className="prose prose-sm dark:prose-invert w-full max-w-full"
+            dir={theme.direction}
+          />
+          <Page4 />
+        </Paper>
+      </div>);
+      break;
+    case 5:
+      mainContent = (<div
+        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
+      >
+        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
+          <div
+            className="prose prose-sm dark:prose-invert w-full max-w-full"
+            dir={theme.direction}
+          />
+          <Page5 />
+        </Paper>
+      </div>);
+      break;
+    default:
+      break;
+  }
 
   return (
     <FusePageSimple
       content={
         <div className="w-full">
-          <SwipeableViews index={activeStep - 1} enableMouseEvents /*onChangeIndex={handleStepChange}*/>
-            {usersteps.steps.map((step, index) => (
-              <div
-                className="flex justify-center p-16 pb-64 sm:p-24 sm:pb-64 md:p-48 md:pb-64"
-                key={index}
-              >
-                <Paper className="w-full max-w-lg mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-                  <div
-                    className="prose prose-sm dark:prose-invert w-full max-w-full"
-                    dangerouslySetInnerHTML={{ __html: step.content }}
-                    dir={theme.direction}
-                  />
-                </Paper>
-              </div>
-            ))}
+          <SwipeableViews index={0} enableMouseEvents onChangeIndex={handleStepChange}>
+            {mainContent}
           </SwipeableViews>
-
           <Hidden lgDown>
             <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
               <ButtonGroup
@@ -130,7 +160,7 @@ function CreateUser() {
                   className="min-h-56 rounded-full"
                   size="large"
                   startIcon={<FuseSvgIcon>heroicons-outline:arrow-narrow-left</FuseSvgIcon>}
-                  //onClick={handleBack}
+                  onClick={handleBack}
                 >
                   Prev
                 </Button>
@@ -142,7 +172,7 @@ function CreateUser() {
                   className="min-h-56 rounded-full"
                   size="large"
                   endIcon={<FuseSvgIcon>heroicons-outline:arrow-narrow-right</FuseSvgIcon>}
-                  //onClick={handleNext}
+                  onClick={handleNext}
                 >
                   Next
                 </Button>
@@ -156,7 +186,7 @@ function CreateUser() {
               className="flex sticky bottom-0 z-10 items-center w-full p-16 border-t-1"
             >
               <IconButton
-                //onClick={(ev) => setLeftSidebarOpen(true)}
+                onClick={(ev) => setLeftSidebarOpen(true)}
                 aria-label="open left sidebar"
                 size="large"
               >
@@ -167,11 +197,11 @@ function CreateUser() {
 
               <CreateUserProgress className="flex flex-1 mx-8" steps={usersteps} />
 
-              <IconButton /*onClick={handleBack}*/>
+              <IconButton onClick={handleBack}>
                 <FuseSvgIcon>heroicons-outline:arrow-narrow-left</FuseSvgIcon>
               </IconButton>
 
-              <IconButton /*onClick={handleNext}*/>
+              <IconButton onClick={handleNext}>
                 <FuseSvgIcon>heroicons-outline:arrow-narrow-right</FuseSvgIcon>
               </IconButton>
             </Box>
@@ -205,7 +235,7 @@ function CreateUser() {
                       fontSize: 13,
                     },
                   }}
-                  /*onClick={() => handleStepChange(step.order)}*/
+                  onClick={() => handleStepChange(step.order)}
                   expanded
                 >
                   <StepLabel

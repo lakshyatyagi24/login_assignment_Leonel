@@ -8,6 +8,13 @@ export const getOrder = createAsyncThunk('eCommerceApp/order/getOrder', async (o
   return data === undefined ? null : data;
 });
 
+export const getUser = createAsyncThunk('eCommerceApp/order/getOrder', async (userId) => {
+  const response = await axios.post(`/api/account/get_user_information/`,{"id": userId});
+  const data = await response.data;
+
+  return data === undefined ? null : data;
+});
+
 export const saveOrder = createAsyncThunk('eCommerceApp/order/saveOrder', async (order) => {
   const response = await axios.put('/api/ecommerce/orders', order);
   const data = await response.data;
