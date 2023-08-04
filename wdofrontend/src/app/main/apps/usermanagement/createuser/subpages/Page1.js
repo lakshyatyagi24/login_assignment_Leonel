@@ -1,42 +1,31 @@
 import * as React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { lighten } from '@mui/material/styles';
-import FuseUtils from '@fuse/utils';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
+import { Controller, useForm} from 'react-hook-form';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import FormHelperText from '@mui/material/FormHelperText';
-import Cookies from 'js-cookie';
+import { Grid } from '@mui/material';
+import { useSelector } from 'react-redux';
+import { selectUser } from 'app/store/userSlice';
+import { authRoles } from 'src/app/auth';
 
-/**
- * Form Validation Schema
- */
 const schema = yup.object().shape({
-  firstName: yup.string().required('You must enter First name'),
-  lastName: yup.string().required('You must enter Last name'),
+  name: yup.string().required('You must enter name'),
+  fatherName: yup.string().required('You must enter Father name'),
+  motherName: yup.string().required('You must enter Mother name'),
   email: yup.string().email('You must enter a valid email').required('You must enter a email'),
   password: yup
     .string()
     .required('Please enter your password.')
     .min(8, 'Password is too short - should be 8 chars minimum.'),
   passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
+  birthday: yup.date().required('You must enter birthday'),
+  phone: yup.number().required('You must phone number'),
+  alterPhone: yup.number().required('You must enter althernative phone number'),
+  userRole: yup.string().required('You must enter your role'),
 });
 
 
@@ -50,44 +39,40 @@ const defaultValues = {
   birthday: '',
   phone: '',
   alterPhone: '',
-  role: '10',
-  image: null,
-  acceptTermsConditions: false,
+  userRole: 'others',
 };
 
-function Page1() {
-  const { control, formState, handleSubmit, reset} = useForm({
+const Page1 = React.forwardRef((props, ref) => {
+  const user = useSelector(selectUser);
+
+  const { control, formState } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const { isValid, dirtyFields, errors, setError } = formState;
+  const { errors } = formState;
 
-  function onSubmit({ firstName, lastName, password, email }) {
-    const csrfToken = Cookies.get('csrftoken');
-
-    console.log(firstName, lastName, password, email);
-
-    let formData = {
-      first_name: firstName,
-      last_name: lastName,
-      password: password,
-      re_password: password,
-      email: email
-    };
+  const childFunction = () => {
+    var validater = 0;
+    Object.values(control._formValues).forEach(value => {
+      if (value == '' || value == null) {
+        validater = 1;
+      }
+    })
+    if (Object.keys(errors).length || validater) { return 0; }
+    return { "personal_details": control._formValues }
   }
 
+  React.useImperativeHandle(ref, () => ({
+    childFunction
+  }));
+
   return (
-    <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
-      <div className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full md:w-1/2 sm:w-auto md:h-full md:rounded-none sm:shadow md:shadow-none">
-        <div className="w-full max-w-320 sm:w-320 mx-auto ">
-          <form
-            name="registerForm"
-            noValidate
-            className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+    <form>
+      <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
             <Controller
               name="name"
               control={control}
@@ -106,7 +91,8 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="fatherName"
               control={control}
@@ -116,16 +102,17 @@ function Page1() {
                   className="mb-24"
                   label="Father name"
                   autoFocus
-                  type="name"
-                  error={!!errors.fathertName}
-                  helperText={errors?.fathertName?.message}
+                  type="fatherName"
+                  error={!!errors.fatherName}
+                  helperText={errors?.fatherName?.message}
                   variant="outlined"
                   required
                   fullWidth
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="motherName"
               control={control}
@@ -144,7 +131,11 @@ function Page1() {
                 />
               )}
             />
+          </Grid>
+        </Grid>
 
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
             <Controller
               name="email"
               control={control}
@@ -162,7 +153,8 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="password"
               control={control}
@@ -180,7 +172,8 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="passwordConfirm"
               control={control}
@@ -198,28 +191,11 @@ function Page1() {
                 />
               )}
             />
-            {/* <Button
-              variant="contained"
-              color="secondary"
-              className="w-full mt-24"
-              aria-label="Register"
-              disabled={_.isEmpty(dirtyFields) || !isValid}
-              type="submit"
-              size="large"
-            >
-              Create your free account
-            </Button> */}
-          </form>
-        </div>
-      </div>
-      <div className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full md:w-1/2 sm:w-auto md:h-full  md:rounded-none sm:shadow md:shadow-none ">
-        <div className="w-full max-w-320 sm:w-320 mx-auto ">
-          <form
-            name="registerForm"
-            noValidate
-            className="flex flex-col justify-center w-full mt-32"
-            onSubmit={handleSubmit(onSubmit)}
-          >
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
             <Controller
               name="birthday"
               control={control}
@@ -238,7 +214,8 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="phone"
               control={control}
@@ -257,7 +234,8 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+          <Grid item xs={4}>
             <Controller
               name="alterPhone"
               control={control}
@@ -276,30 +254,38 @@ function Page1() {
                 />
               )}
             />
-
+          </Grid>
+        </Grid>
+        <Grid container spacing={1}>
+          <Grid item xs={4}>
             <Controller
-              name="role"
+              name="userRole"
               sx={{ m: 1, minWidth: 120 }}
               control={control}
               render={({ field }) => (
-                <Select
-                  {...field}
-                  value={defaultValues.role}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  error={!!errors.role}
-                  helperText={errors?.role?.message}
-                >
-                  <MenuItem value={10}>Ten</MenuItem>
-                  <MenuItem value={20}>Twenty</MenuItem>
-                  <MenuItem value={30}>Thirty</MenuItem>
-                </Select>
+                <div>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={defaultValues.userRole}
+                    {...field}
+                    error={!!errors.userRole}
+                    helperText={errors?.userRole?.message}
+                  >
+                    {
+                      authRoles.roles[user.role].map((role, index) => (
+                        <MenuItem value={role} key={index}>{role}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </div>
               )}
             />
-          </form>
-        </div>
-      </div>
-    </div>
+          </Grid>
+        </Grid>
+      </Box>
+    </form>
   );
-}
+})
 
 export default Page1;

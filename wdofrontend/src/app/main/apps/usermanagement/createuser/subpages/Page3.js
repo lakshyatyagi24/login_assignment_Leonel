@@ -1,300 +1,300 @@
 import * as React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
+import { Controller, useForm} from 'react-hook-form';
 import Grid from '@mui/material/Grid';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { lighten } from '@mui/material/styles';
-import FuseUtils from '@fuse/utils';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import FormHelperText from '@mui/material/FormHelperText';
-import Cookies from 'js-cookie';
 
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  firstName: yup.string().required('You must enter First name'),
-  lastName: yup.string().required('You must enter Last name'),
-  email: yup.string().email('You must enter a valid email').required('You must enter a email'),
-  password: yup
-    .string()
-    .required('Please enter your password.')
-    .min(8, 'Password is too short - should be 8 chars minimum.'),
-  passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
+  street1: yup.string().required('You must enter street'),
+  landmark1: yup.string().required('You must enter landmark'),
+  city1: yup.string().required('You must enter city'),
+  state1: yup.string().required('You must enter state'),
+  zip_code1: yup.string().required('You must enter zipconde'),
+  street2: yup.string().required('You must enter street'),
+  landmark2: yup.string().required('You must enter landmark'),
+  city2: yup.string().required('You must enter city'),
+  state2: yup.string().required('You must enter state'),
+  zip_code2: yup.string().required('You must enter zipconde'),
+
 });
 
 
 const defaultValues = {
-  name: '',
-  fatherName: '',
-  motherName: '',
-  email: '',
-  password: '',
-  passwordConfirm: '',
-  birthday: '',
-  phone: '',
-  alterPhone: '',
-  role: '10',
-  image: null,
-  acceptTermsConditions: false,
-};
+  street1: "",
+  landmark1: "",
+  city1: "",
+  state1: "",
+  zip_code1: "",
+  street2: "",
+  landmark2: "",
+  city2: "",
+  state2: "",
+  zip_code2: "",
+}
 
-function Page3() {
+const Page3 = React.forwardRef((props, ref) => {
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const { isValid, dirtyFields, errors, setError } = formState;
+  const { errors } = formState;
 
-  function onSubmit({ firstName, lastName, password, email }) {
-    const csrfToken = Cookies.get('csrftoken');
+  const childFunction = () => {
+    var validater = 0;
+    Object.values(control._formValues).forEach(value => {
+      console.log(value);
+      if (value == '' || value == null) {
+        validater = 1;
+      }
+    })
+    console.log("validater---------", validater);
 
-    console.log(firstName, lastName, password, email);
+    if (Object.keys(errors).length || validater) { return 0; }
 
-    let formData = {
-      first_name: firstName,
-      last_name: lastName,
-      password: password,
-      re_password: password,
-      email: email
-    };
+    const data = {
+      permanent_address: {
+        street: control._formValues.street1,
+        landmark: control._formValues.landmark1,
+        city: control._formValues.city1,
+        state: control._formValues.state1,
+        zip_code: control._formValues.zip_code1,
+      },
+      current_address: {
+        street: control._formValues.street2,
+        landmark: control._formValues.landmark2,
+        city: control._formValues.city2,
+        state: control._formValues.state2,
+        zip_code: control._formValues.zip_code2,
+      }
+    }
+
+    return data;
   }
 
-  const names = ["10th", "12th", "University Qualification", "Other Qualification (Optional)"]
+  React.useImperativeHandle(ref, () => ({
+    childFunction
+  }));
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <h2>Permanent Address</h2>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Streets"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
+    <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+      <form>
+        <h2>Permanent Address</h2>
+        <Grid container spacing={1}>
+          <Grid item xs={8}>
+            <Controller
+              name="street1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Streets"
+                  autoFocus
+                  type="name"
+                  error={!!errors.street1}
+                  helperText={errors?.street1?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="landmark1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Landmark"
+                  autoFocus
+                  type="name"
+                  error={!!errors.landmark1}
+                  helperText={errors?.landmark1?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="city1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="City/Village"
+                  autoFocus
+                  type="name"
+                  error={!!errors.city1}
+                  helperText={errors?.city1?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="state1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="State"
+                  autoFocus
+                  type="name"
+                  error={!!errors.state1}
+                  helperText={errors?.state1?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="zip_code1"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Zipcode"
+                  autoFocus
+                  type="name"
+                  error={!!errors.zip_code1}
+                  helperText={errors?.zip_code1?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Landmark"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
+        <h2>Current Address</h2>
+        <Grid container spacing={1}>
+          <Grid item xs={8}>
+            <Controller
+              name="street2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Streets"
+                  autoFocus
+                  type="name"
+                  error={!!errors.street2}
+                  helperText={errors?.street2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="landmark2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Landmark"
+                  autoFocus
+                  type="name"
+                  error={!!errors.landmark2}
+                  helperText={errors?.landmark2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="city2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="City/Village"
+                  autoFocus
+                  type="name"
+                  error={!!errors.city2}
+                  helperText={errors?.city2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="state2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="State"
+                  autoFocus
+                  type="name"
+                  error={!!errors.state2}
+                  helperText={errors?.state2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="zip_code2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Zipcode"
+                  autoFocus
+                  type="name"
+                  error={!!errors.zip_code2}
+                  helperText={errors?.zip_code2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
         </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="City/Village"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="State"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Zipcode"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-          <FormControlLabel
-            label="Same as permanent address"
-            control={<Checkbox size="small" />}
-          />
-        </Grid>
-      </Grid>
-      <h2>Current Address</h2>
-      <Grid container spacing={2}>
-        <Grid item xs={8}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Streets"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Landmark"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="City/Village"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="State"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-        <Grid item xs={4}>
-          <Controller
-            name="name"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                className="mb-24"
-                label="Zipcode"
-                autoFocus
-                type="name"
-                error={!!errors.name}
-                helperText={errors?.name?.message}
-                variant="outlined"
-                required
-                fullWidth
-              />
-            )}
-          />
-        </Grid>
-      </Grid>
+      </form>
     </Box>
   );
-}
+})
 
 export default Page3;
