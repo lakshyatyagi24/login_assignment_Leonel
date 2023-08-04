@@ -51,3 +51,32 @@ def create_custom_user(request):
 
     return JsonResponse({"data": "Successfully extracted"})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_controllable_users(request):
+    roles = ['boss', 'ceo', 'superadmin', 'admin', 'manager', 'team_leader', 'employee', 'teacher', 'others']
+    role = request.user.role
+
+    if role not in roles:
+        return JsonResponse({'msg': 'This role does not exist in role controlls'}, status=500)
+
+    index = roles.index(role) + 1
+    control_roles = roles[index:]
+
+    users = UserAccount.objects.all()
+    users_with_role = users.filter(role__in=control_roles)
+
+    user_persons = []
+
+    for user in users_with_role:
+        json_data = { 
+            "email": user.email, 
+            "first_name": user.first_name, 
+            "last_name": user.last_name, 
+            "role": user.role, 
+            "status": user.status
+        }
+        print(json_data)
+        user_persons.append(json_data)
+
+    return JsonResponse({"users": user_persons}, status=200)
