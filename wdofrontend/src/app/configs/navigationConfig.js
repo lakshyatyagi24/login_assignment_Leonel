@@ -124,6 +124,45 @@ const navigationConfig = [
       },
     ],
   },
+  {
+    id: 'dashboards pending user',
+    title: 'Pending Dashboard',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    auth: authRoles.onlyPending,
+    children: [
+      {
+        id: 'dashboards.project 2',
+        title: 'Dashboard',
+        type: 'item',
+        icon: 'heroicons-outline:clipboard-check',
+        url: '/dashboards/project',
+      },
+      {
+        id: 'dashboards.settings 3',
+        title: 'Setting',
+        type: 'item',
+        icon: 'heroicons-outline:briefcase',
+        url: '/apps/settings',
+      },
+    ],
+  },
+  {
+    id: 'dashboards rejected user',
+    title: 'Reject Dashboard',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    auth: authRoles.onlyReject,
+    children: [
+      {
+        id: 'dashboards.settings 5',
+        title: 'Rejected',
+        type: 'item',
+        icon: 'heroicons-outline:briefcase',
+        url: '/pages/reject',
+      },
+    ],
+  },
   // {
   //   id: 'apps',
   //   title: 'Applications',

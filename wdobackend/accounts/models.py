@@ -300,10 +300,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             self.address.save()
         if self.document_upload is not None:
             self.document_upload.save()
-        if self.role is None:
-            self.role = 'admin'
-        if self.is_active == 0:
-            self.is_active = 1
+        self.status = 'pending'
 
         # call the parent class's save method
         super().save(*args, **kwargs)

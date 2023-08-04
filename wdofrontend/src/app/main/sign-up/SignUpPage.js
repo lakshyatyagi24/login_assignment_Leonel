@@ -22,6 +22,8 @@ import jwtService from '../../auth/services/jwtService';
 import { DropzoneArea } from 'material-ui-dropzone';
 import axios from '../../../axios-order';
 import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
+import { showMessage } from 'app/store/fuse/messageSlice';
 
 /**
  * Form Validation Schema
@@ -50,6 +52,7 @@ const defaultValues = {
 };
 
 function SignUpPage() {
+  const dispatch = useDispatch();
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
@@ -59,23 +62,6 @@ function SignUpPage() {
   const { isValid, dirtyFields, errors, setError } = formState;
 
   function onSubmit({ firstName, lastName, password, email }) {
-    const csrfToken = Cookies.get('csrftoken');
-
-    console.log(firstName, lastName, password, email);
-
-    let formData = {
-      first_name: firstName,
-      last_name: lastName,
-      password: password,
-      re_password: password,
-      email: email
-    };
-
-    // axios.post('/auth/users/', JSON.stringify(formData)).then(response => {
-    //   console.log(response);
-    // }).catch(error => {
-    //   console.log(error);
-    // })
     jwtService
       .createUser({
         first_name: firstName,
@@ -85,16 +71,29 @@ function SignUpPage() {
         email: email
       })
       .then((user) => {
-        // No need to do anything, registered user data will be set at app/auth/AuthContext
+        dispatch(
+          showMessage({
+            message: 'Successfully registered! Check email box and verify your user!',//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'success'//success error info warning null
+          }))
       })
-      .catch((_errors) => {
-        _errors.forEach((error) => {
-          console.log(error);
-          setError(error.type, {
-            type: 'manual',
-            message: error.message,
-          });
-        });
+      .catch((error) => {
+        console.log(error);
+        dispatch(
+          showMessage({
+            message: `Registration has been failed\n${JSON.stringify(error.response.data)}`,//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'error'//success error info warning null
+          }))
       });
   }
 

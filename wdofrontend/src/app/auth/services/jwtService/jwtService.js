@@ -49,28 +49,30 @@ class JwtService extends FuseUtils.EventEmitter {
 
   createUser = (data) => {
     return new Promise((resolve, reject) => {
-      axios.post(jwtServiceConfig.signUp, data).then((response) => {
-        if (response.data.user) {
-          this.setSession(response.data.access_token);
-          resolve(response.data.user);
-
-          this.setSession(this.getAccessToken());
-
-          axios
-            .get(jwtServiceConfig.getCurrentUser)
-            .then((response) => {
-              this.emit('onLogin', response.data);
-            })
-            .catch((error) => {
-              this.logout();
-              reject(new Error('Failed to get user data.'));
-            })
-        } else {
-          reject(response.data.error);
-        }
-      });
-    });
+      axios.post(jwtServiceConfig.signUp, data)
+        .then((response) => {
+          resolve(response.data)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
   };
+
+  generateRole = (data) => {
+    let role = data.role;
+
+    if (!role || role === '') {
+      role = 'guest';
+    }
+
+    if (data.status === 'pending')
+      role = 'pending'
+    if (data.status === 'reject')
+      role = 'reject';
+
+    return role;
+  }
 
   signInWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
@@ -103,7 +105,7 @@ class JwtService extends FuseUtils.EventEmitter {
                     ]
                   },
                   "from": "wdoinstitution",
-                  "role": response.data.role,
+                  "role": this.generateRole(response.data),
                   "uuid": access_token.user_id
                 }
                 resolve(user);
@@ -114,11 +116,14 @@ class JwtService extends FuseUtils.EventEmitter {
                 reject(new Error('Failed to get user data.'));
               })
           }
-        });
+        })
+        .catch((error) => {
+          reject(error.response.data.detail);
+        })
     });
   };
 
-  signInWithToken = () => {
+  signInWithToken = () => { 
     return new Promise((resolve, reject) => {
       axios
         .post(jwtServiceConfig.verifyToken, {
@@ -150,7 +155,7 @@ class JwtService extends FuseUtils.EventEmitter {
                   ]
                 },
                 "from": "wdoinstitution",
-                "role": response.data.role,
+                "role": this.generateRole(response.data),
                 "uuid": access_token.user_id
               }
               resolve(user);
@@ -166,6 +171,18 @@ class JwtService extends FuseUtils.EventEmitter {
         });
     });
   };
+
+  verify = (uid, token) => {
+    return new Promise((resolve, reject) => {
+      axios.post(jwtServiceConfig.userActivation, { uid, token })
+        .then((response) => {
+          resolve(response.data)
+        })
+        .catch((err) => {
+          reject(new Error('Failed to user activation'))
+        })
+    });
+  }
 
   updateUserData = (user) => {
     return axios.post(jwtServiceConfig.updateUser, {
