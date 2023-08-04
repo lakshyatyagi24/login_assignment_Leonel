@@ -165,7 +165,6 @@ class UserQualification(models.Model):
             other_qualification=Qualification.from_dict(user_qualification_dict.get('other_qualification'))
         )
 
-    @classmethod
     def to_dict(self):
         return {
             'tenth_qualification': self.tenth_qualification.to_dict(),
@@ -228,8 +227,8 @@ class UserDocuments(models.Model):
     bank_passbook = models.CharField(max_length=255, null=True)
     graduation = models.CharField(max_length=255, null=True)
     post_graduation = models.CharField(max_length=255, null=True)
+    experience_certificate = models.CharField(max_length=255, null=True)
     
-    @classmethod
     def to_dict(self):
         return {
             'tenth_marksheet': self.tenth_marksheet,
@@ -238,7 +237,8 @@ class UserDocuments(models.Model):
             'alternative_card': self.alternative_card,
             'bank_passbook': self.bank_passbook,
             'graduation': self.graduation,
-            'post_graduation': self.post_graduation
+            'post_graduation': self.post_graduation,
+            'experience_certificate': self.experience_certificate
         }
     @classmethod
     def from_dict(cls, data):
@@ -249,7 +249,8 @@ class UserDocuments(models.Model):
             alternative_card=data['alternative_card'],
             bank_passbook=data['bank_passbook'],
             graduation=data['graduation'],
-            post_graduation=data['post_graduation']
+            post_graduation=data['post_graduation'],
+            experience_certificate=data['experience_certificate']
         )
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
@@ -282,6 +283,17 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             self.email = self.personal_details.email_address
             self.role = self.personal_details.role
 
+            full_name = self.personal_details.name  # Replace 'name' with the actual field name in your model
+
+            if full_name:
+                split_name = full_name.split()
+                
+                self.first_name = split_name[0]
+                self.last_name = ' '.join(split_name[1:]) if len(split_name) > 1 else ''
+            else:
+                self.first_name = ''
+                self.last_name = ''
+
         if self.qualification_details is not None:
             self.qualification_details.save()
         if self.address is not None:
@@ -297,9 +309,20 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         super().save(*args, **kwargs)
 
     def to_dict(self):
-        return {
-            role: self.role
+        user_dict = {
+            'email': self.email,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'is_active': self.is_active,
+            'is_staff': self.is_staff,
+            'role': self.role,
+            'status': self.status,
+            'personal_details': self.personal_details.to_dict() if self.personal_details else None,
+            'qualification_details': self.qualification_details.to_dict() if self.qualification_details else None,
+            'address': self.address.to_dict() if self.address else None,
+            'document_upload': self.document_upload.to_dict() if self.document_upload else None
         }
+        return user_dict
 
     def get_full_name(self):
         return self.first_name + self.last_name
