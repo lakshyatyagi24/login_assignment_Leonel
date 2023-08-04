@@ -8,6 +8,13 @@ export const getOrders = createAsyncThunk('eCommerceApp/orders/getOrders', async
   return data;
 });
 
+export const getUsers = createAsyncThunk('eCommerceApp/orders/getOrders', async () => {
+  const response = await axios.get('/api/account/get_controllable_users/');
+  const data = await response.data;
+
+  return data;
+});
+
 export const removeOrders = createAsyncThunk(
   'eCommerceApp/orders/removeOrders',
   async (orderIds, { dispatch, getState }) => {

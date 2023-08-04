@@ -84,7 +84,8 @@ function Order(props) {
                 className="flex items-center sm:mb-12"
                 component={Link}
                 role="button"
-                to="/apps/e-commerce/orders"
+                // to="/apps/e-commerce/orders"
+                to="/apps/user/get-all-users"
                 color="inherit"
               >
                 <FuseSvgIcon size={20}>
@@ -92,7 +93,7 @@ function Order(props) {
                     ? 'heroicons-outline:arrow-sm-left'
                     : 'heroicons-outline:arrow-sm-right'}
                 </FuseSvgIcon>
-                <span className="mx-4 font-medium">Orders</span>
+                <span className="mx-4 font-medium">Users</span>
               </Typography>
             </motion.div>
 
@@ -102,7 +103,7 @@ function Order(props) {
               className="flex flex-col items-center sm:items-start min-w-0 items-center sm:items-start"
             >
               <Typography className="text-20 truncate font-semibold">
-                {`Order ${order.reference}`}
+                {`User ${order.reference}`}
               </Typography>
               <Typography variant="caption" className="font-medium">
                 {`From ${order.customer.firstName} ${order.customer.lastName}`}

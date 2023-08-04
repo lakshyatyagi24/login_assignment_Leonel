@@ -40,13 +40,6 @@ const rows = [
     sort: true,
   },
   {
-    id: 'date_created',
-    align: 'right',
-    disablePadding: false,
-    label: 'Date Created',
-    sort: true,
-  },
-  {
     id: 'user_status',
     align: 'left',
     disablePadding: false,

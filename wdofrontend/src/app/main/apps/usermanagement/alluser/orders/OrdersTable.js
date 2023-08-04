@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import withRouter from '@fuse/core/withRouter';
 import FuseLoading from '@fuse/core/FuseLoading';
 import OrdersStatus from '../order/OrdersStatus';
-import { getOrders, selectOrders, selectOrdersSearchText } from '../store/ordersSlice';
+import { getUsers, selectOrders, selectOrdersSearchText } from '../store/ordersSlice';
 import OrdersTableHead from './OrdersTableHead';
 
 function OrdersTable(props) {
@@ -33,15 +33,17 @@ function OrdersTable(props) {
   });
 
   useEffect(() => {
-    dispatch(getOrders()).then(() => setLoading(false));
+    dispatch(getUsers()).then(() => setLoading(false));
   }, [dispatch]);
 
   useEffect(() => {
     if (searchText.length !== 0) {
-      setData(FuseUtils.filterArrayByString(orders, searchText));
+      //setData(FuseUtils.filterArrayByString(orders, searchText));
+      setData(FuseUtils.filterArrayByString(orders[0], searchText));
       setPage(0);
     } else {
-      setData(orders);
+      //setData(orders);
+      setData(orders[0]);
     }
   }, [orders, searchText]);
 
@@ -218,6 +220,86 @@ function OrdersTable(props) {
                 );
               })}
           </TableBody> */}
+
+          <TableBody>
+            {_.orderBy(
+              data,
+              [
+                (o) => {
+                  switch (order.id) {
+                    case 'id': {
+                      return parseInt(o.id, 10);
+                    }
+                    case 'email': {
+                      return o.email;
+                    }
+                    case 'user_name': {
+                      return o.first_name;
+                    }
+                    case 'user_status': {
+                      return o.status;
+                    }
+                    case 'user_role': {
+                      return o.role;
+                    }
+                    default: {
+                      return o[order.id];
+                    }
+                  }
+                },
+              ],
+              [order.direction]
+            )
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((n,index) => {
+                const isSelected = selected.indexOf(n.id) !== -1;
+                return (
+                  <TableRow
+                    className="h-72 cursor-pointer"
+                    hover
+                    role="checkbox"
+                    aria-checked={isSelected}
+                    tabIndex={-1}
+                    key={n.id}
+                    selected={isSelected}
+                    onClick={(event) => handleClick(n)}
+                  >
+                    <TableCell className="w-40 md:w-64 text-center" padding="none">
+                      <Checkbox
+                        checked={isSelected}
+                        onClick={(event) => event.stopPropagation()}
+                        onChange={(event) => handleCheck(event, n.id)}
+                      />
+                    </TableCell>
+
+                    <TableCell className="p-4 md:p-16" component="th" scope="row">
+                      {index + 1}
+                    </TableCell>
+
+                    <TableCell className="p-4 md:p-16 truncate" component="th" scope="row">
+                      {`${n.first_name} ${n.last_name}`}
+                    </TableCell>
+
+                    {/* <TableCell className="p-4 md:p-16" component="th" scope="row" align="right">
+                      <span>$</span>
+                      {n.total}
+                    </TableCell> */}
+
+                    <TableCell className="p-4 md:p-16" component="th" scope="row">
+                      {n.email}
+                    </TableCell>
+
+                    <TableCell className="p-4 md:p-16" component="th" scope="row">
+                      <OrdersStatus name={n.status} />
+                    </TableCell>
+
+                    <TableCell className="p-4 md:p-16" component="th" scope="row">
+                      {n.role}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+          </TableBody>
         </Table>
       </FuseScrollbars>
 
