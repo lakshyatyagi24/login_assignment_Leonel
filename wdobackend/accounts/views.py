@@ -42,8 +42,6 @@ def create_custom_user(request):
     document_upload = UserDocuments.from_dict(data['document_upload'])
 
     user_account = UserAccount(
-        email=personal_details.email_address,
-        role=personal_details.role,
         personal_details=personal_details,
         qualification_details=qualification_details,
         address=address,

@@ -22,15 +22,15 @@ class UserAccountManager(BaseUserManager):
 
 class UserPersonalDetails(models.Model):
     name = models.CharField(max_length=255)
-    father_name = models.CharField(max_length=255)
-    mother_name = models.CharField(max_length=255)
+    father_name = models.CharField(max_length=255, null=True)
+    mother_name = models.CharField(max_length=255, null=True)
     email_address = models.EmailField(max_length=255)
     password = models.CharField(max_length=255)
     birthday = models.DateField(max_length=255)
-    phonenumber = models.CharField(max_length=255)
-    alterphone = models.CharField(max_length=255)
+    phonenumber = models.CharField(max_length=255, null=True)
+    alter_phone = models.CharField(max_length=255, null=True)
     role = models.CharField(max_length=255)
-    avatar = models.CharField(max_length=255)
+    avatar = models.CharField(max_length=255, null=True)
 
     def to_dict(self):
         return {
@@ -41,7 +41,7 @@ class UserPersonalDetails(models.Model):
             "password": self.password,
             "birthday": self.birthday,
             "phonenumber": self.phonenumber,
-            "alterphone": self.alterphone,
+            "alter_phone": self.alter_phone,
             "role": self.role,
             "avatar": self.avatar
         }
@@ -56,15 +56,15 @@ class UserPersonalDetails(models.Model):
             password=data.get("password"),
             birthday=data.get("birthday"),
             phonenumber=data.get("phonenumber"),
-            alterphone=data.get("alterphone"),
+            alter_phone=data.get("alter_phone"),
             role=data.get("role"),
             avatar=data.get("avatar")
         )
 
 class Address(models.Model):
-    street = models.CharField(max_length=255)
-    city = models.CharField(max_length=255)
-    state = models.CharField(max_length=255)
+    street = models.CharField(max_length=255, null=True)
+    city = models.CharField(max_length=255, null=True)
+    state = models.CharField(max_length=255, null=True)
 
     def to_dict(self):
         return {
@@ -82,9 +82,9 @@ class Address(models.Model):
         )
 
 class UserAddress(models.Model):
-    permanent_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='permanent_address')
-    current_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='current_address')
-    same_address = models.BooleanField()
+    permanent_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='permanent_address', null=True)
+    current_address = models.ForeignKey(Address, on_delete=models.CASCADE, related_name='current_address', null=True)
+    same_address = models.BooleanField(null=True)
 
     def to_dict(self):
         return {
@@ -100,8 +100,15 @@ class UserAddress(models.Model):
             same_address=ua_dict['same_address'],
         )
 
+    def save(self, *args, **kwargs):
+        if self.permanent_address:
+            self.permanent_address.save()
+        if self.current_address:
+            self.current_address.save()
+        super(UserAddress, self).save(*args, **kwargs)
+
 class Qualification(models.Model):
-    board_name = models.CharField(max_length=255)
+    board_name = models.CharField(max_length=255, null=True)
     year = models.IntegerField()
     percentage = models.IntegerField()
     roll_no = models.IntegerField()
@@ -124,25 +131,29 @@ class Qualification(models.Model):
         }
 
 class UserQualification(models.Model):
-    tenth_qualification = models.ForeignKey(
+    tenth_qualification = models.OneToOneField(
         Qualification,
         on_delete=models.CASCADE,
-        related_name='user_tenth_qualification'
+        null=True,
+        related_name='tenth_qualification_reverse'
     )
-    twelfth_qualification = models.ForeignKey(
+    twelfth_qualification = models.OneToOneField(
         Qualification,
         on_delete=models.CASCADE,
-        related_name='user_twelfth_qualification'
+        null=True,
+        related_name='twelfth_qualification_reverse'
     )
-    university_qualification = models.ForeignKey(
+    university_qualification = models.OneToOneField(
         Qualification,
         on_delete=models.CASCADE,
-        related_name='user_university_qualification'
+        null=True,
+        related_name='university_qualification_reverse'
     )
-    other_qualification = models.ForeignKey(
+    other_qualification = models.OneToOneField(
         Qualification,
         on_delete=models.CASCADE,
-        related_name='user_other_qualification'
+        null=True,
+        related_name='other_qualification_reverse'
     )
 
     @classmethod
@@ -154,6 +165,7 @@ class UserQualification(models.Model):
             other_qualification=Qualification.from_dict(user_qualification_dict.get('other_qualification'))
         )
 
+    @classmethod
     def to_dict(self):
         return {
             'tenth_qualification': self.tenth_qualification.to_dict(),
@@ -161,12 +173,25 @@ class UserQualification(models.Model):
             'university_qualification': self.university_qualification.to_dict(),
             'other_qualification': self.other_qualification.to_dict()
         }
+        
+    def save(self, *args, **kwargs):
+        if self.tenth_qualification:
+            self.tenth_qualification.save()
+        if self.twelfth_qualification:
+            self.twelfth_qualification.save()
+        if self.university_qualification:
+            self.university_qualification.save()
+        if self.other_qualification:
+            self.other_qualification.save()
+
+        # call the parent class's save method
+        super(UserQualification, self).save(*args, **kwargs)
 
 class IndustryExperience(models.Model):
-    industry_name = models.CharField(max_length=255)
-    designation = models.CharField(max_length=255)
-    salary = models.CharField(max_length=255)
-    total_year = models.CharField(max_length=255)
+    industry_name = models.CharField(max_length=255, null=True)
+    designation = models.CharField(max_length=255, null=True)
+    salary = models.CharField(max_length=255, null=True)
+    total_year = models.CharField(max_length=255, null=True)
     user_experiences = models.ForeignKey('UserAccount', on_delete=models.CASCADE, related_name='user_experiences')
     
     def to_dict(self):
@@ -196,13 +221,13 @@ class IndustryExperience(models.Model):
         )
 
 class UserDocuments(models.Model):
-    tenth_marksheet = models.CharField(max_length=255)
-    twelfth_marksheet = models.CharField(max_length=255)
-    aadhar_card = models.CharField(max_length=255)
-    alternative_card = models.CharField(max_length=255)
-    bank_passbook = models.CharField(max_length=255)
-    graduation = models.CharField(max_length=255)
-    post_graduation = models.CharField(max_length=255)
+    tenth_marksheet = models.CharField(max_length=255, null=True)
+    twelfth_marksheet = models.CharField(max_length=255, null=True)
+    aadhar_card = models.CharField(max_length=255, null=True)
+    alternative_card = models.CharField(max_length=255, null=True)
+    bank_passbook = models.CharField(max_length=255, null=True)
+    graduation = models.CharField(max_length=255, null=True)
+    post_graduation = models.CharField(max_length=255, null=True)
     
     @classmethod
     def to_dict(self):
@@ -229,12 +254,12 @@ class UserDocuments(models.Model):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
+    first_name = models.CharField(max_length=255, null=True)
+    last_name = models.CharField(max_length=255, null=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     role = models.CharField(max_length=255)
-    status = models.CharField(max_length=255)
+    status = models.CharField(max_length=255, null=True)
 
     personal_details = models.OneToOneField(UserPersonalDetails, on_delete=models.CASCADE, null=True)
     qualification_details = models.OneToOneField(UserQualification, on_delete=models.CASCADE, null=True)
@@ -253,6 +278,10 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         # save the related fields
         if self.personal_details is not None:
             self.personal_details.save()
+            self.set_password(self.personal_details.password)
+            self.email = self.personal_details.email_address
+            self.role = self.personal_details.role
+
         if self.qualification_details is not None:
             self.qualification_details.save()
         if self.address is not None:
