@@ -12,93 +12,21 @@ i18next.addResourceBundle('ar', 'navigation', ar);
 
 const navigationConfig = [
   {
-    id: 'dashboards others',
-    title: 'Others Dashboard',
+    id: 'Dashboard',
+    title: 'Dashboard',
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
-    auth: authRoles.onlyothers,
+    auth: authRoles.student,
     children: [
-      {
-        id: 'dashboards.project',
-        title: 'Dashboard',
-        type: 'item',
-        icon: 'heroicons-outline:clipboard-check',
-        url: '/dashboards/project',
-      }
-    ],
-  },
-  {
-    id: 'dashboards teacher',
-    title: 'Teacher Dashboard',
-    //subtitle: 'Unique dashboard designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    auth: authRoles.onlyteacher,
-    children: [
-      {
-        id: 'dashboards.project',
-        title: 'Dashboard 1',
-        type: 'item',
-        icon: 'heroicons-outline:clipboard-check',
-        url: '/dashboards/project',
-      },
       {
         id: 'dashboards.analytics',
-        title: 'Dashboard 2',
+        title: 'Dashboard',
         type: 'item',
         icon: 'heroicons-outline:chart-pie',
         url: '/dashboards/analytics',
       },
-    ],
-  },
-  {
-    id: 'dashboards admin',
-    title: 'Admin Dashboard',
-    //subtitle: 'Unique dashboard designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    auth: authRoles.onlyadmin,
-    children: [
-      {
-        id: 'dashboards.project',
-        title: 'Dashboard',
-        type: 'item',
-        icon: 'heroicons-outline:clipboard-check',
-        url: '/dashboards/project',
-      },
-      {
-        id: 'dashboards.settings',
-        title: 'Setting',
-        type: 'item',
-        icon: 'heroicons-outline:briefcase',
-        url: '/apps/settings',
-      },
-    ],
-  },
-  {
-    id: 'dashboards superadmin',
-    title: 'Superadmin Dashboard',
-    //subtitle: 'Unique dashboard designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    auth: authRoles.onlysuperadmin,
-    children: [
-      {
-        id: 'dashboards.project',
-        title: 'Dashboard 1',
-        type: 'item',
-        icon: 'heroicons-outline:clipboard-check',
-        url: '/dashboards/project',
-      },
-      {
-        id: 'dashboards.analytics',
-        title: 'Dashboard 2',
-        type: 'item',
-        icon: 'heroicons-outline:chart-pie',
-        url: '/dashboards/analytics',
-      },
-    ],
+    ]
   },
   {
     id: 'User Management',
@@ -122,7 +50,31 @@ const navigationConfig = [
         icon: 'heroicons-outline:chart-pie',
         url: '/apps/user/get-all-users',
       },
+      {
+        id: 'apps.contacts',
+        title: 'Contacts',
+        type: 'item',
+        icon: 'heroicons-outline:user-group',
+        url: '/apps/contacts',
+      },
     ],
+  },
+  {
+    id: 'Dashboard',
+    title: 'Dashboard',
+    //subtitle: 'Unique dashboard designs',
+    type: 'group',
+    icon: 'heroicons-outline:home',
+    auth: authRoles.student,
+    children: [
+      {
+        id: 'dashboards.analytics',
+        title: 'Dashboard',
+        type: 'item',
+        icon: 'heroicons-outline:chart-pie',
+        url: '/apps/contacts',
+      },
+    ]
   },
   // {
   //   id: 'apps',
