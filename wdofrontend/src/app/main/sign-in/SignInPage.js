@@ -17,10 +17,13 @@ import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
 import jwtService from '../../auth/services/jwtService';
 import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { showMessage } from 'app/store/fuse/messageSlice';
 
 /**
  * Form Validation Schema
  */
+
 const schema = yup.object().shape({
   email: yup.string().email('You must enter a valid email').required('You must enter a email'),
   password: yup
@@ -36,6 +39,8 @@ const defaultValues = {
 };
 
 function SignInPage() {
+  const dispatch = useDispatch();
+
   const { control, formState, handleSubmit, setError, setValue } = useForm({
     mode: 'onChange',
     defaultValues,
@@ -60,13 +65,17 @@ function SignInPage() {
       .then((user) => {
         // No need to do anything, user data will be set at app/auth/AuthContext
       })
-      .catch((_errors) => {
-        _errors.forEach((error) => {
-          setError(error.type, {
-            type: 'manual',
-            message: error.message,
-          });
-        });
+      .catch((error) => {
+        dispatch(
+          showMessage({
+            message: `Login failed\n${JSON.stringify(error)}`,//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'error'//success error info warning null
+          }))
       });
   }
 

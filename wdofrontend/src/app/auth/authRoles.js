@@ -25,6 +25,10 @@ const authRoles = {
   },
 
 
+  employee: ['employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  teacher: ['teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  others: ['others','teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss', 'pending', 'reject', 'student'],
+  student: ['student'],
   onlyboss: ['boss'],
   onlyceo: ['ceo'],
   onlysuperadmin: ['superadmin'],
@@ -35,7 +39,8 @@ const authRoles = {
   onlyteacher: ['teacher'],
   onlyothers: ['others'],
   onlyguest: [],
-
+  onlyPending: ['pending'],
+  onlyReject: ['reject']
 };
 
 export default authRoles;

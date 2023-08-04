@@ -86,26 +86,26 @@ export const orderStatuses = [
   },
   {
     id: 3,
-    name: 'Preparing the order',
-    color: 'bg-orange text-black',
-  },
-  {
-    id: 4,
     name: 'reject',
     color: 'bg-red-700 text-white',
   },
   {
-    id: 5,
+    id: 4,
     name: 'defect',
-    color: 'bg-pink text-white',
-  }
+    color: 'bg-orange text-black',
+  },
+  {
+    id: 6,
+    name: 'inactive',
+    color: 'bg-purple-700 text-white',
+  },
 ];
 
 function OrdersStatus(props) {
   return (
     <div
       className={clsx(
-        'inline text-12 font-semibold py-4 px-12 rounded-full truncate',
+        'inline text-20 font-semibold py-4 px-12 rounded-full truncate',
         _.find(orderStatuses, { name: props.name }).color
       )}
     >

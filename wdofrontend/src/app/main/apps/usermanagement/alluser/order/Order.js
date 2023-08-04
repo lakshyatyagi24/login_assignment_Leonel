@@ -13,10 +13,13 @@ import { useDeepCompareEffect } from '@fuse/hooks';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import reducer from '../store';
-import { getOrder, resetOrder, selectOrder } from '../store/orderSlice';
+import { getUser, getOrder, resetOrder, selectOrder } from '../store/orderSlice';
 import InvoiceTab from './tabs/InvoiceTab';
 import OrderDetailsTab from './tabs/OrderDetailsTab';
 import ProductsTab from './tabs/ProductsTab';
+import { ButtonGroup } from '@mui/material';
+import { orderStatuses } from './OrdersStatus';
+import Stack from '@mui/material/Stack';
 
 function Order(props) {
   const dispatch = useDispatch();
@@ -25,12 +28,12 @@ function Order(props) {
   const isMobile = useThemeMediaQuery((_theme) => _theme.breakpoints.down('lg'));
 
   const routeParams = useParams();
-  const { orderId } = routeParams;
+  const { userId } = routeParams;
   const [tabValue, setTabValue] = useState(0);
   const [noOrder, setNoOrder] = useState(false);
 
   useDeepCompareEffect(() => {
-    dispatch(getOrder(orderId)).then((action) => {
+    dispatch(getUser(userId)).then((action) => {
       if (!action.payload) {
         setNoOrder(true);
       }
@@ -48,28 +51,28 @@ function Order(props) {
     setTabValue(value);
   }
 
-  if (noOrder) {
-    return (
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1, transition: { delay: 0.1 } }}
-        className="flex flex-col flex-1 items-center justify-center h-full"
-      >
-        <Typography color="text.secondary" variant="h5">
-          There is no such order!
-        </Typography>
-        <Button
-          className="mt-24"
-          component={Link}
-          variant="outlined"
-          to="/apps/e-commerce/orders"
-          color="inherit"
-        >
-          Go to Orders Page
-        </Button>
-      </motion.div>
-    );
-  }
+  // if (noOrder) {
+  //   return (
+  //     <motion.div
+  //       initial={{ opacity: 0 }}
+  //       animate={{ opacity: 1, transition: { delay: 0.1 } }}
+  //       className="flex flex-col flex-1 items-center justify-center h-full"
+  //     >
+  //       <Typography color="text.secondary" variant="h5">
+  //         There is no such order!
+  //       </Typography>
+  //       <Button
+  //         className="mt-24"
+  //         component={Link}
+  //         variant="outlined"
+  //         to="/apps/e-commerce/orders"
+  //         color="inherit"
+  //       >
+  //         Go to Orders Page
+  //       </Button>
+  //     </motion.div>
+  //   );
+  // }
 
   return (
     <FusePageCarded
@@ -93,21 +96,37 @@ function Order(props) {
                     ? 'heroicons-outline:arrow-sm-left'
                     : 'heroicons-outline:arrow-sm-right'}
                 </FuseSvgIcon>
-                <span className="mx-4 font-medium">Users</span>
+                <span className="mx-4 font-medium">All Users</span>
               </Typography>
             </motion.div>
 
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
-              className="flex flex-col items-center sm:items-start min-w-0 items-center sm:items-start"
+              className="flex flex-row items-center sm:items-start min-w-0 items-center sm:items-start"
             >
-              <Typography className="text-20 truncate font-semibold">
-                {`User ${order.reference}`}
-              </Typography>
-              <Typography variant="caption" className="font-medium">
-                {`From ${order.customer.firstName} ${order.customer.lastName}`}
-              </Typography>
+              <motion.div>
+                <Typography className="text-20 truncate font-semibold">
+                  {`Username: ${order.first_name} ${order.last_name}`}
+                </Typography>
+                <Typography className="text-20 truncate font-semibold">
+                  {`Email: ${order.email}`}
+                </Typography>
+                {/* <Typography variant="caption" className="font-medium">
+                {`Role: ${order.role}`}
+              </Typography> */}
+              </motion.div>
+              <motion.div>
+                <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
+                  <Stack variant="contained" direction="row" spacing={3}>
+                    <Button className="bg-green text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="ACTIVE"}>ACTIVE</Button>
+                    <Button className="bg-blue-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="PENDING"}>PENDING</Button>
+                    <Button className="bg-red-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="REJECT"}>REJECT</Button>
+                    <Button className="bg-orange text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="DEFECT"}>DEFECT</Button>
+                    <Button className="bg-purple-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="INACTIVE"}>INACTIVE</Button>
+                  </Stack>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         )
@@ -123,17 +142,19 @@ function Order(props) {
             scrollButtons="auto"
             classes={{ root: 'w-full h-64 border-b-1' }}
           >
-            <Tab className="h-64" label="Order Details" />
-            <Tab className="h-64" label="Products" />
-            <Tab className="h-64" label="Invoice" />
+            <Tab className="h-64" label="Personal Details" />
+            <Tab className="h-64" label="Qualification Details" />
+            <Tab className="h-64" label="Address Details" />
+            <Tab className="h-64" label="Industry Experience Details" />
+            <Tab className="h-64" label="Document Upload Details" />
           </Tabs>
-          {order && (
+          {/* {order && (
             <div className="p-16 sm:p-24 max-w-3xl w-full">
               {tabValue === 0 && <OrderDetailsTab />}
               {tabValue === 1 && <ProductsTab />}
               {tabValue === 2 && <InvoiceTab order={order} />}
             </div>
-          )}
+          )} */}
         </>
       }
       scroll={isMobile ? 'normal' : 'content'}
