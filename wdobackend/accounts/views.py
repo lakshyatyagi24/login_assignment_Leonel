@@ -74,6 +74,7 @@ def get_controllable_users(request):
 
     for user in users_with_role:
         json_data = { 
+            "id": user.id,
             "email": user.email, 
             "first_name": user.first_name, 
             "last_name": user.last_name, 
@@ -88,11 +89,11 @@ def get_controllable_users(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def get_user_information(request):
-    if request.data.get('email') is None:
-        return JsonResponse({'msg': 'Please provide email address'})
+    if request.data.get('id') is None:
+        return JsonResponse({'msg': 'Please provide id'})
     
     try:
-        user = UserAccount.objects.get(email=request.data.get('email'))
+        user = UserAccount.objects.get(id=request.data.get('id'))
         print(roles.index(request.user.role), roles.index(user.role))
         if roles.index(request.user.role) >= roles.index(user.role):
             return JsonResponse({'msg': 'You are not allowed to read that user'})

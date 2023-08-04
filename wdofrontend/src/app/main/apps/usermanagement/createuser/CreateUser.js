@@ -33,7 +33,7 @@ function CreateUser() {
       { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' },
       { order: 4, title: 'Document Upload', subtitle: 'Enter your Document upload' },
     ],
-    currentStep: 3,
+    currentStep: 1,
     totalSteps: 5,
   });
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
