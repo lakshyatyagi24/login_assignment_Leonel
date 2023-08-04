@@ -11,6 +11,7 @@ import appsConfigs from '../main/apps/appsConfigs';
 import pagesConfigs from '../main/pages/pagesConfigs';
 import authRoleExamplesConfigs from '../main/auth/authRoleExamplesConfigs';
 import DocumentationConfig from '../main/documentation/DocumentationConfig';
+import activateConfigs from '../main/activate/ActivatePageConfig';
 
 const routeConfigs = [
   ...appsConfigs,
@@ -22,6 +23,7 @@ const routeConfigs = [
   SignOutConfig,
   SignInConfig,
   SignUpConfig,
+  activateConfigs
 ];
 
 const routes = [

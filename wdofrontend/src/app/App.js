@@ -49,7 +49,7 @@ const App = () => {
         <AuthProvider>
           <BrowserRouter>
             <FuseAuthorization
-              userRole={user.role}
+              userRole={user.role || 'guest'}
               loginRedirectUrl={settingsConfig.loginRedirectUrl}
             >
               <SnackbarProvider
