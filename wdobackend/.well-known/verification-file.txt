@@ -1,6 +1,0 @@
-CNAME wm5r49vx2cpfu8hf.fern08999.pythonanywhere.com -> smtp.mailtrap.live
-TXT fern08999.pythonanywhere.com -> v=spf1 include:_spf.smtp.mailtrap.live -all
-CNAME rwmt1._domainkey.fern08999.pythonanywhere.com -> rwmt1.dkim.smtp.mailtrap.live
-CNAME rwmt2._domainkey.fern08999.pythonanywhere.com -> rwmt2.dkim.smtp.mailtrap.live
-TXT _dmarc.fern08999.pythonanywhere.com -> v=DMARC1; p=none; rua=mailto:dmarc@smtp.mailtrap.live; ruf=mailto:dmarc@smtp.mailtrap.live; rf=afrf; pct=100
-CNAME mt-link.fern08999.pythonanywhere.com -> t.mailtrap.live

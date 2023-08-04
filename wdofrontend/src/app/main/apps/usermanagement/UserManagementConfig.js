@@ -1,6 +1,6 @@
 import { lazy } from 'react';
-import AllUser from './alluser/AllUser';
 import CreateUser from './createuser/CreateUser';
+import Orders from './alluser/orders/Orders';
 
 const UserManagement = lazy(() => import('./UserManagement'));
 
@@ -18,8 +18,8 @@ const UserManagementConfig = {
           element: <CreateUser />,
         },
         {
-          path: 'get-all-user',
-          element: <AllUser />
+          path: 'get-all-users',
+          element: <Orders />
         }
       ],
     },
