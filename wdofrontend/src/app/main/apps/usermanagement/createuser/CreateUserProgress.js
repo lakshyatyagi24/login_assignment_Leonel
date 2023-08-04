@@ -6,7 +6,7 @@ function CreateUserProgress({ steps, className }) {
     <LinearProgress
       className={clsx('w-full h-2', className)}
       variant="determinate"
-      value={(steps.progress.currentStep * 100) / steps.totalSteps}
+      value={(steps.currentStep * 100) / steps.totalSteps}
       color="secondary"
     />
   );
