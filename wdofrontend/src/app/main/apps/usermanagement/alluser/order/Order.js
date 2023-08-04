@@ -17,6 +17,9 @@ import { getUser, getOrder, resetOrder, selectOrder } from '../store/orderSlice'
 import InvoiceTab from './tabs/InvoiceTab';
 import OrderDetailsTab from './tabs/OrderDetailsTab';
 import ProductsTab from './tabs/ProductsTab';
+import { ButtonGroup } from '@mui/material';
+import { orderStatuses } from './OrdersStatus';
+import Stack from '@mui/material/Stack';
 
 function Order(props) {
   const dispatch = useDispatch();
@@ -100,17 +103,30 @@ function Order(props) {
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1, transition: { delay: 0.3 } }}
-              className="flex flex-col items-center sm:items-start min-w-0 items-center sm:items-start"
+              className="flex flex-row items-center sm:items-start min-w-0 items-center sm:items-start"
             >
-              <Typography className="text-20 truncate font-semibold">
-                {`Username: ${order.first_name} ${order.last_name}`}
-              </Typography>
-              <Typography className="text-20 truncate font-semibold">
-                {`Email: ${order.email}`}
-              </Typography>
-              {/* <Typography variant="caption" className="font-medium">
+              <motion.div>
+                <Typography className="text-20 truncate font-semibold">
+                  {`Username: ${order.first_name} ${order.last_name}`}
+                </Typography>
+                <Typography className="text-20 truncate font-semibold">
+                  {`Email: ${order.email}`}
+                </Typography>
+                {/* <Typography variant="caption" className="font-medium">
                 {`Role: ${order.role}`}
               </Typography> */}
+              </motion.div>
+              <motion.div>
+                <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
+                  <Stack variant="contained" direction="row" spacing={3}>
+                    <Button className="bg-green text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="ACTIVE"}>ACTIVE</Button>
+                    <Button className="bg-blue-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="PENDING"}>PENDING</Button>
+                    <Button className="bg-red-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="REJECT"}>REJECT</Button>
+                    <Button className="bg-orange text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="DEFECT"}>DEFECT</Button>
+                    <Button className="bg-purple-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="INACTIVE"}>INACTIVE</Button>
+                  </Stack>
+                </div>
+              </motion.div>
             </motion.div>
           </div>
         )

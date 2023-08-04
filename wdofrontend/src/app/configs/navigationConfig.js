@@ -17,7 +17,7 @@ const navigationConfig = [
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
-    auth: authRoles.student,
+    auth: authRoles.others,
     children: [
       {
         id: 'dashboards.analytics',
@@ -34,7 +34,7 @@ const navigationConfig = [
     //subtitle: 'Unique dashboard designs',
     type: 'group',
     icon: 'heroicons-outline:home',
-    auth: authRoles.student,
+    auth: authRoles.teacher,
     children: [
       {
         id: 'Create User',
@@ -49,32 +49,8 @@ const navigationConfig = [
         type: 'item',
         icon: 'heroicons-outline:chart-pie',
         url: '/apps/user/get-all-users',
-      },
-      {
-        id: 'apps.contacts',
-        title: 'Contacts',
-        type: 'item',
-        icon: 'heroicons-outline:user-group',
-        url: '/apps/contacts',
-      },
+      }
     ],
-  },
-  {
-    id: 'Dashboard',
-    title: 'Dashboard',
-    //subtitle: 'Unique dashboard designs',
-    type: 'group',
-    icon: 'heroicons-outline:home',
-    auth: authRoles.student,
-    children: [
-      {
-        id: 'dashboards.analytics',
-        title: 'Dashboard',
-        type: 'item',
-        icon: 'heroicons-outline:chart-pie',
-        url: '/apps/contacts',
-      },
-    ]
   },
   // {
   //   id: 'apps',
