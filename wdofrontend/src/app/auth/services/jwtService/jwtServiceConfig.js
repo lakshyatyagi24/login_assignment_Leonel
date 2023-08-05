@@ -8,7 +8,8 @@ const jwtServiceConfig = {
   getCurrentUser: 'api/account/current_user/',
   getControllableUsers: '/api/account/get_controllable_users/',
   userActivation: 'api/auth/users/activation/',
-  createCustomUser: 'api/account/create_custom_user/'
+  createCustomUser: 'api/account/create_custom_user/',
+  changeUserStatus: 'api/account/change_status/'
 };
 
 export default jwtServiceConfig;

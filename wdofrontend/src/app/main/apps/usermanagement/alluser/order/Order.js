@@ -14,16 +14,23 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import reducer from '../store';
 import { getUser, getOrder, resetOrder, selectOrder } from '../store/orderSlice';
-import InvoiceTab from './tabs/InvoiceTab';
-import OrderDetailsTab from './tabs/OrderDetailsTab';
-import ProductsTab from './tabs/ProductsTab';
-import { ButtonGroup } from '@mui/material';
-import { orderStatuses } from './OrdersStatus';
+// import InvoiceTab from './tabs/InvoiceTab';
+// import OrderDetailsTab from './tabs/OrderDetailsTab';
+// import ProductsTab from './tabs/ProductsTab';
+// import { ButtonGroup } from '@mui/material';
+// import { orderStatuses } from './OrdersStatus';
 import Stack from '@mui/material/Stack';
+import jwbServiceConfig from "../../../../../../app/auth/services/jwtService/jwtServiceConfig";
+import axios from 'axios';
+import PersonalDetailsTab from './tabs/PersonalDetailsTab';
+import QualificationDetailsTab from './tabs/QualificationDetailsTab';
+import AddressDetailsTab from './tabs/AddressDetailsTab';
+import IndustryExperienceDetails from './tabs/IndustryExperienceDetails';
 
 function Order(props) {
   const dispatch = useDispatch();
   const order = useSelector(selectOrder);
+  console.log(order);
   const theme = useTheme();
   const isMobile = useThemeMediaQuery((_theme) => _theme.breakpoints.down('lg'));
 
@@ -31,6 +38,7 @@ function Order(props) {
   const { userId } = routeParams;
   const [tabValue, setTabValue] = useState(0);
   const [noOrder, setNoOrder] = useState(false);
+
 
   useDeepCompareEffect(() => {
     dispatch(getUser(userId)).then((action) => {
@@ -49,6 +57,15 @@ function Order(props) {
 
   function handleTabChange(event, value) {
     setTabValue(value);
+  }
+
+  function onChangeStatus(status) {
+    axios.post(jwbServiceConfig.changeUserStatus, { id: userId, status: status })
+      .then((response) => {
+      })
+      .catch((error) => {
+
+      })
   }
 
   // if (noOrder) {
@@ -119,11 +136,36 @@ function Order(props) {
               <motion.div>
                 <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
                   <Stack variant="contained" direction="row" spacing={3}>
-                    <Button className="bg-green text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="ACTIVE"}>ACTIVE</Button>
-                    <Button className="bg-blue-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="PENDING"}>PENDING</Button>
-                    <Button className="bg-red-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="REJECT"}>REJECT</Button>
-                    <Button className="bg-orange text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="DEFECT"}>DEFECT</Button>
-                    <Button className="bg-purple-700 text-white text-40" style={{borderRadius:"5px", border:"2px solid white"}} disabled={order.status.toUpperCase()=="INACTIVE"}>INACTIVE</Button>
+                    <Button className="bg-green text-white text-40"
+                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      disabled={order.status.toUpperCase() == "ACTIVE"}
+                      onClick={(event) => onChangeStatus("active")}>
+                      ACTIVE
+                    </Button>
+                    <Button className="bg-blue-700 text-white text-40"
+                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      disabled={order.status.toUpperCase() == "PENDING"}
+                      onClick={(event) => onChangeStatus("pending")}>
+
+                      PENDING
+                    </Button>
+                    <Button className="bg-red-700 text-white text-40"
+                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      disabled={order.status.toUpperCase() == "REJECT"}
+                      onClick={(event) => onChangeStatus("reject")}>
+                      REJECT
+                    </Button>
+                    <Button className="bg-orange text-white text-40"
+                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      disabled={order.status.toUpperCase() == "DEFECT"}
+                      onClick={(event) => onChangeStatus("defect")}>
+                      DEFECT
+                    </Button>
+                    <Button className="bg-purple-700 text-white text-40"
+                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      disabled={order.status.toUpperCase() == "INACTIVE"}
+                      onClick={(event) => onChangeStatus("inactive")}>
+                      INACTIVE</Button>
                   </Stack>
                 </div>
               </motion.div>
@@ -131,7 +173,7 @@ function Order(props) {
           </div>
         )
       }
-      content={
+      content={ order &&
         <>
           <Tabs
             value={tabValue}
@@ -142,19 +184,19 @@ function Order(props) {
             scrollButtons="auto"
             classes={{ root: 'w-full h-64 border-b-1' }}
           >
-            <Tab className="h-64" label="Personal Details" />
+            <Tab className="h-64" label="PersonalDetails" />
             <Tab className="h-64" label="Qualification Details" />
             <Tab className="h-64" label="Address Details" />
             <Tab className="h-64" label="Industry Experience Details" />
-            <Tab className="h-64" label="Document Upload Details" />
           </Tabs>
-          {/* {order && (
-            <div className="p-16 sm:p-24 max-w-3xl w-full">
-              {tabValue === 0 && <OrderDetailsTab />}
-              {tabValue === 1 && <ProductsTab />}
-              {tabValue === 2 && <InvoiceTab order={order} />}
+          {Object.assign(order)["personal_details"] && (
+            <div className="w-full">
+              {tabValue === 0 && <PersonalDetailsTab personal_details={order.personal_details}/>}
+              {tabValue === 1 && <QualificationDetailsTab qualification_details={order.qualification_details}/>}
+              {tabValue === 2 && <AddressDetailsTab  address_details={order.address}/>}
+              {tabValue === 3 && <IndustryExperienceDetails/>}
             </div>
-          )} */}
+          )}
         </>
       }
       scroll={isMobile ? 'normal' : 'content'}

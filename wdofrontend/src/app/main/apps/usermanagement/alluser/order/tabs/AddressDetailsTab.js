@@ -1,51 +1,45 @@
 import * as React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm} from 'react-hook-form';
+import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
 import * as yup from 'yup';
 import _ from '@lodash';
 import Box from '@mui/material/Box';
-import { Grid } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { selectUser } from 'app/store/userSlice';
-import { authRoles } from 'src/app/auth';
 
+/**
+ * Form Validation Schema
+ */
 const schema = yup.object().shape({
-  name: yup.string().required('You must enter name'),
-  father_name: yup.string().required('You must enter Father name'),
-  mother_name: yup.string().required('You must enter Mother name'),
-  email_address: yup.string().email('You must enter a valid email').required('You must enter a email'),
-  password: yup
-    .string()
-    .required('Please enter your password.')
-    .min(8, 'Password is too short - should be 8 chars minimum.'),
-  passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  birthday: yup.date().required('You must enter birthday'),
-  phonenumber: yup.number().required('You must phone number'),
-  alter_phone: yup.number().required('You must enter althernative phone number'),
-  userRole: yup.string().required('You must enter your role'),
+  street1: yup.string().required('You must enter street'),
+  landmark1: yup.string().required('You must enter landmark'),
+  city1: yup.string().required('You must enter city'),
+  state1: yup.string().required('You must enter state'),
+  zip_code1: yup.string().required('You must enter zipconde'),
+  street2: yup.string().required('You must enter street'),
+  landmark2: yup.string().required('You must enter landmark'),
+  city2: yup.string().required('You must enter city'),
+  state2: yup.string().required('You must enter state'),
+  zip_code2: yup.string().required('You must enter zipconde'),
+
 });
 
 
 const defaultValues = {
-  name: '',
-  father_name: '',
-  mother_name: '',
-  email_address: '',
-  password: '',
-  passwordConfirm: '',
-  birthday: '',
-  phonenumber: '',
-  alter_phone: '',
-  role: 'others',
-};
+  street1: "",
+  landmark1: "",
+  city1: "",
+  state1: "",
+  zip_code1: "",
+  street2: "",
+  landmark2: "",
+  city2: "",
+  state2: "",
+  zip_code2: "",
+}
 
-const Page1 = React.forwardRef((props, ref) => {
-  const user = useSelector(selectUser);
-
-  const { control, formState } = useForm({
+const AddressDetailsTab = React.forwardRef((props, ref) => {
+  const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
@@ -60,8 +54,28 @@ const Page1 = React.forwardRef((props, ref) => {
         validater = 1;
       }
     })
+
     if (Object.keys(errors).length || validater) { return 0; }
-    return control._formValues
+
+    const data = {
+      permanent_address: {
+        street: control._formValues.street1,
+        landmark: control._formValues.landmark1,
+        city: control._formValues.city1,
+        state: control._formValues.state1,
+        zip_code: control._formValues.zip_code1,
+      },
+      current_address: {
+        street: control._formValues.street2,
+        landmark: control._formValues.landmark2,
+        city: control._formValues.city2,
+        state: control._formValues.state2,
+        zip_code: control._formValues.zip_code2,
+      },
+      same_address: true,
+    }
+
+    return data;
   }
 
   React.useImperativeHandle(ref, () => ({
@@ -69,22 +83,23 @@ const Page1 = React.forwardRef((props, ref) => {
   }));
 
   return (
-    <form>
-      <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+    <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+      <form>
+        <h2>Permanent Address</h2>
         <Grid container spacing={1}>
-          <Grid item xs={4}>
+          <Grid item xs={8}>
             <Controller
-              name="name"
+              name="street1"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Name"
+                  label="Streets"
                   autoFocus
                   type="name"
-                  error={!!errors.name}
-                  helperText={errors?.name?.message}
+                  error={!!errors.street1}
+                  helperText={errors?.street1?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -94,59 +109,17 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="father_name"
+              name="landmark1"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Father name"
-                  autoFocus
-                  type="father_name"
-                  error={!!errors.father_name}
-                  helperText={errors?.father_name?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Controller
-              name="mother_name"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Mother name"
+                  label="Landmark"
                   autoFocus
                   type="name"
-                  error={!!errors.mother_name}
-                  helperText={errors?.mother_name?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={1}>
-          <Grid item xs={4}>
-            <Controller
-              name="email_address"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Email"
-                  type="email"
-                  error={!!errors.email_address}
-                  helperText={errors?.email_address?.message}
+                  error={!!errors.landmark1}
+                  helperText={errors?.landmark1?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -156,58 +129,17 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="password"
+              name="city1"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Password"
-                  type="password"
-                  error={!!errors.password}
-                  helperText={errors?.password?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-          </Grid>
-          <Grid item xs={4}>
-            <Controller
-              name="passwordConfirm"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label="Password (Confirm)"
-                  type="password"
-                  error={!!errors.passwordConfirm}
-                  helperText={errors?.passwordConfirm?.message}
-                  variant="outlined"
-                  required
-                  fullWidth
-                />
-              )}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={1}>
-          <Grid item xs={4}>
-            <Controller
-              name="birthday"
-              control={control}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  className="mb-24"
-                  label=""
+                  label="City/Village"
                   autoFocus
-                  type="date"
-                  error={!!errors.birthday}
-                  helperText={errors?.birthday?.message}
+                  type="name"
+                  error={!!errors.city1}
+                  helperText={errors?.city1?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -217,17 +149,17 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="phonenumber"
+              name="state1"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Phone Number"
+                  label="State"
                   autoFocus
-                  type="phone number"
-                  error={!!errors.phonenumber}
-                  helperText={errors?.phonenumber?.message}
+                  type="name"
+                  error={!!errors.state1}
+                  helperText={errors?.state1?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -237,17 +169,17 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="alter_phone"
+              name="zip_code1"
               control={control}
               render={({ field }) => (
                 <TextField
                   {...field}
                   className="mb-24"
-                  label="Alternative Phone Number"
+                  label="Zipcode"
                   autoFocus
-                  type="phone number"
-                  error={!!errors.alter_phone}
-                  helperText={errors?.alter_phone?.message}
+                  type="name"
+                  error={!!errors.zip_code1}
+                  helperText={errors?.zip_code1?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -256,36 +188,112 @@ const Page1 = React.forwardRef((props, ref) => {
             />
           </Grid>
         </Grid>
+        <h2>Current Address</h2>
         <Grid container spacing={1}>
-          <Grid item xs={4}>
+          <Grid item xs={8}>
             <Controller
-              name="role"
+              name="street2"
               control={control}
               render={({ field }) => (
-                <div>
-                  <Select
-                    labelId="demo-simple-select-helper-label"
-                    id="demo-simple-select-helper"
-                    value={defaultValues.role}
-                    {...field}
-                    error={!!errors.role}
-                    helperText={errors?.role?.message}
-                    fullWidth
-                  >
-                    {
-                      authRoles.roles[user.role].map((r, index) => (
-                        <MenuItem value={r} key={index}>{r}</MenuItem>
-                      ))
-                    }
-                  </Select>
-                </div>
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Streets"
+                  autoFocus
+                  type="name"
+                  error={!!errors.street2}
+                  helperText={errors?.street2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="landmark2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Landmark"
+                  autoFocus
+                  type="name"
+                  error={!!errors.landmark2}
+                  helperText={errors?.landmark2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="city2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="City/Village"
+                  autoFocus
+                  type="name"
+                  error={!!errors.city2}
+                  helperText={errors?.city2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="state2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="State"
+                  autoFocus
+                  type="name"
+                  error={!!errors.state2}
+                  helperText={errors?.state2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
+              )}
+            />
+          </Grid>
+          <Grid item xs={4}>
+            <Controller
+              name="zip_code2"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  className="mb-24"
+                  label="Zipcode"
+                  autoFocus
+                  type="name"
+                  error={!!errors.zip_code2}
+                  helperText={errors?.zip_code2?.message}
+                  variant="outlined"
+                  required
+                  fullWidth
+                />
               )}
             />
           </Grid>
         </Grid>
-      </Box>
-    </form>
+      </form>
+    </Box>
   );
 })
 
-export default Page1;
+export default AddressDetailsTab;

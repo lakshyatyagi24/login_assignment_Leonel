@@ -25,9 +25,9 @@ const authRoles = {
   },
 
 
-  employee: ['employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
-  teacher: ['teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
-  others: ['others','teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss', 'pending', 'reject', 'student'],
+  //employee: ['employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  //teacher: ['teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss'],
+  //others: ['others','teacher', 'employee','teamleader', 'manager', 'admin', 'superadmin', 'ceo', 'boss', 'pending', 'reject', 'student'],
   student: ['student'],
   onlyboss: ['boss'],
   onlyceo: ['ceo'],
