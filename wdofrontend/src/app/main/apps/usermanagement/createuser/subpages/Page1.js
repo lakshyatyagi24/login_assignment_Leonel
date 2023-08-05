@@ -14,8 +14,8 @@ import { authRoles } from 'src/app/auth';
 
 const schema = yup.object().shape({
   name: yup.string().required('You must enter name'),
-  father_name: yup.string().required('You must enter Father name'),
-  mother_name: yup.string().required('You must enter Mother name'),
+  fatherName: yup.string().required('You must enter Father name'),
+  motherName: yup.string().required('You must enter Mother name'),
   email: yup.string().email('You must enter a valid email').required('You must enter a email'),
   password: yup
     .string()
@@ -23,23 +23,23 @@ const schema = yup.object().shape({
     .min(8, 'Password is too short - should be 8 chars minimum.'),
   passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
   birthday: yup.date().required('You must enter birthday'),
-  phonenumber: yup.number().required('You must phone number'),
-  alter_phone: yup.number().required('You must enter althernative phone number'),
-  role: yup.string().required('You must enter your role'),
+  phone: yup.number().required('You must phone number'),
+  alterPhone: yup.number().required('You must enter althernative phone number'),
+  userRole: yup.string().required('You must enter your role'),
 });
 
 
 const defaultValues = {
   name: '',
-  father_name: '',
-  mother_name: '',
+  fatherName: '',
+  motherName: '',
   email: '',
   password: '',
   passwordConfirm: '',
   birthday: '',
-  phonenumber: '',
-  alter_phone: '',
-  role: 'others',
+  phone: '',
+  alterPhone: '',
+  userRole: 'others',
 };
 
 const Page1 = React.forwardRef((props, ref) => {
@@ -94,7 +94,7 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="father_name"
+              name="fatherName"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -102,9 +102,9 @@ const Page1 = React.forwardRef((props, ref) => {
                   className="mb-24"
                   label="Father name"
                   autoFocus
-                  type="father_name"
-                  error={!!errors.father_name}
-                  helperText={errors?.father_name?.message}
+                  type="fatherName"
+                  error={!!errors.fatherName}
+                  helperText={errors?.fatherName?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -114,7 +114,7 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="mother_name"
+              name="motherName"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -123,8 +123,8 @@ const Page1 = React.forwardRef((props, ref) => {
                   label="Mother name"
                   autoFocus
                   type="name"
-                  error={!!errors.mother_name}
-                  helperText={errors?.mother_name?.message}
+                  error={!!errors.motherName}
+                  helperText={errors?.motherName?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -217,7 +217,7 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="phonenumber"
+              name="phone"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -226,8 +226,8 @@ const Page1 = React.forwardRef((props, ref) => {
                   label="Phone Number"
                   autoFocus
                   type="phone number"
-                  error={!!errors.phonenumber}
-                  helperText={errors?.phonenumber?.message}
+                  error={!!errors.phone}
+                  helperText={errors?.phone?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -237,7 +237,7 @@ const Page1 = React.forwardRef((props, ref) => {
           </Grid>
           <Grid item xs={4}>
             <Controller
-              name="alter_phone"
+              name="alterPhone"
               control={control}
               render={({ field }) => (
                 <TextField
@@ -246,8 +246,8 @@ const Page1 = React.forwardRef((props, ref) => {
                   label="Alternative Phone Number"
                   autoFocus
                   type="phone number"
-                  error={!!errors.alter_phone}
-                  helperText={errors?.alter_phone?.message}
+                  error={!!errors.alterPhone}
+                  helperText={errors?.alterPhone?.message}
                   variant="outlined"
                   required
                   fullWidth
@@ -259,22 +259,22 @@ const Page1 = React.forwardRef((props, ref) => {
         <Grid container spacing={1}>
           <Grid item xs={4}>
             <Controller
-              name="role"
-              sx={{ m: 1, minWidth: 120 }}
+              name="userRole"
               control={control}
               render={({ field }) => (
                 <div>
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    value={defaultValues.role}
+                    value={defaultValues.userRole}
                     {...field}
-                    error={!!errors.role}
-                    helperText={errors?.role?.message}
+                    error={!!errors.userRole}
+                    helperText={errors?.userRole?.message}
+                    fullWidth
                   >
                     {
-                      authRoles.roles[user.role].map((r, index) => (
-                        <MenuItem value={r} key={index}>{r}</MenuItem>
+                      authRoles.roles[user.role].map((role, index) => (
+                        <MenuItem value={role} key={index}>{role}</MenuItem>
                       ))
                     }
                   </Select>

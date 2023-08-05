@@ -78,14 +78,14 @@ function CreateUser() {
             variant: 'error'//success error info warning null
           }))
       });
-      setData(prevState => ({
-        send: 0
-      }))
+    setData(prevState => ({
+      send: 0
+    }))
 
-      setSteps(prevState => ({
-        ...prevState,
-        currentStep: 1
-      }))
+    setSteps(prevState => ({
+      ...prevState,
+      currentStep: 1
+    }))
   }
 
   function updateCurrentStep(index) {
