@@ -120,8 +120,7 @@ class JwtService extends FuseUtils.EventEmitter {
           this.emit('onLogin', user);
         })
         .catch((error) => {
-          console.log(error);
-          reject(error.response.msg);
+          reject(error.response.data);
         })
     });
   };
@@ -175,14 +174,14 @@ class JwtService extends FuseUtils.EventEmitter {
     });
   };
 
-  verify = (uid, token) => {
+  verify = (token) => {
     return new Promise((resolve, reject) => {
-      axios.post(jwtServiceConfig.userActivation, { uid, token })
+      axios.post(jwtServiceConfig.userActivation, { token })
         .then((response) => {
           resolve(response.data)
         })
         .catch((err) => {
-          reject(new Error('Failed to user activation'))
+          reject(err.response.data)
         })
     });
   }

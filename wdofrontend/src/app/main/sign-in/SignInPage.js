@@ -15,10 +15,13 @@ import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import { useEffect } from 'react';
+import * as React from 'react';
 import jwtService from '../../auth/services/jwtService';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { showMessage } from 'app/store/fuse/messageSlice';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 /**
  * Form Validation Schema
@@ -39,6 +42,7 @@ const defaultValues = {
 };
 
 function SignInPage() {
+  const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
 
   const { control, formState, handleSubmit, setError, setValue } = useForm({
@@ -55,20 +59,18 @@ function SignInPage() {
   }, [setValue]);
 
   function onSubmit({ email, password }) {
-    // axios.post('/auth/jwt/create/', { email, password }).then(response => {
-    //   console.log(response);
-    // }).catch(error => {
-    //   console.log(error);
-    // })
+    setOpen(true);
     jwtService
       .signInWithEmailAndPassword(email, password)
       .then((user) => {
+        setOpen(false);
         // No need to do anything, user data will be set at app/auth/AuthContext
       })
       .catch((error) => {
+        setOpen(false);
         dispatch(
           showMessage({
-            message: `Login failed\n${JSON.stringify(error)}`,//text or html
+            message: `Login failed\n${JSON.stringify(error.msg)}`,//text or html
             autoHideDuration: 6000,//ms
             anchorOrigin: {
               vertical: 'top',//top bottom
@@ -81,6 +83,12 @@ function SignInPage() {
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
           <img className="w-100" src="assets/images/logo/wdo-logo01.png" alt="logo" />

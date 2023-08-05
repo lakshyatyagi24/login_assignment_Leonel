@@ -28,7 +28,7 @@ const activatePageConfig = {
   auth: authRoles.onlyguest,
   routes: [
     {
-      path: 'activate/:uid/:token',
+      path: 'activate/:token',
       element: <ActivatePage />,
     },
   ],

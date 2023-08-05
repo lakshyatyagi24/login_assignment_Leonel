@@ -78,7 +78,7 @@ function OrdersTableHead(props) {
   // const {onSelectAllClick, order, orderBy, numSelected, rowCount} = props;
 
   return (
-    <TableHead>
+    <TableHead style={{backgroundColor:"black"}}>
       <TableRow className="h-48 sm:h-64">
         <TableCell
           padding="none"
