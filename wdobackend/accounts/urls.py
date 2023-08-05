@@ -21,7 +21,7 @@ urlpatterns = [
     path('get_controllable_users/', get_controllable_users, name='get_controllable_users'),
     path('get_user_information/', get_user_information, name='get_user_information'),
     path('change_status/', change_status, name='change_status'),
-    path('email-verify/<str:pk>/', email_verify, name='email_verify'),
-    path('forgot-pass/', forgot_pass, name='forgot_pass'),
-    path('change-pass/<str:pk>/', change_pass, name='change_pass'),
+    path('email_verify/', email_verify, name='email_verify'),
+    path('forgot_pass/', forgot_pass, name='forgot_pass'),
+    path('change_pass/', change_pass, name='change_pass'),
 ]

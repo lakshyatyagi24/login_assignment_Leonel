@@ -11,6 +11,7 @@ from rest_framework.response import Response
 from django.contrib.sites.shortcuts import get_current_site
 import json
 from .utils import Util
+from django.core.signing import Signer
 
 from .models import (
     UserPersonalDetails,
@@ -173,16 +174,20 @@ def signup(request):
     user_account.set_password(data.get('password'))
     user_account.status = 'pending'
     user_account.save()
+    user_account.is_active = 0
+    signer = Signer()
 
     current_site = get_current_site(request).domain
-    relativeLink = "/api/account/email-verify/"
-    absurl = 'http://'+ current_site + relativeLink + str(user_account.id)
+    relativeLink = "/activate/"
+    absurl = 'http://'+ current_site + relativeLink + signer.sign(str(user_account.id))
     email_body = 'Hi user use link below to verify your email \n' + absurl 
     data = {'email_body': email_body,'to_email': user_account.email, 'email_subject':'Verify Your Email'}
     
-    if Util.send_email(data) == True:
-        return Response( { 'user': user_account.to_dict(), 'msg': 'Successfully registered' }, status=200 )
-    return Response( {'user': user_account.to_dict(), 'msg': 'Verify email has not been sent'}, status=500 )
+    try:
+        if Util.send_email(data) == True:
+            return Response( { 'user': user_account.to_dict(), 'msg': 'Successfully registered' }, status=200 )
+    except Exception as e:
+        return Response( {'user': user_account.to_dict(), 'msg': 'Verify email has not been sent'}, status=500 )
 
 @api_view(['PUT'])
 @permission_classes([IsAuthenticated])
@@ -204,9 +209,25 @@ def change_status(request):
     return Response( { 'msg': 'Changing status successfully changed', 'data': user.to_dict() }, status=200 )
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([])
 def email_verify(request):
-    return Response( { 'msg': 'success' }, status=200 )
+    token = request.data.get('token')
+    if token is None:
+        return Response({ 'msg': 'Please provide token' }, status=500)
+
+    signer = Signer()
+    try:
+        strid = signer.unsign(token)
+    except Exception as e:
+        return Response( {'msg': 'Invalid token'}, status=500)
+
+    try:
+        user = UserAccount.objects.get(id=int(strid))
+        user.is_active = 1
+        user.save()
+        return Response( {'msg': 'Successfully registered'}, status=200 )
+    except UserAccount.DoesNotExist:
+        return Response( { 'msg': 'Cannot find the user' }, status=500 )
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -214,6 +235,12 @@ def forgot_pass(request):
     return Response( { 'msg': 'success' }, status=200 )
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([])
 def change_pass(request):
+    st = '14'
+    
+    signer = Signer()
+    crypt = signer.sign(st)
+    print(crypt)
+    print(signer.unsign(crypt))
     return Response( { 'msg': 'success' }, status=200 )
