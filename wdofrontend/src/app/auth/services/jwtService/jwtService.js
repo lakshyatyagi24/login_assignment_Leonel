@@ -83,42 +83,33 @@ class JwtService extends FuseUtils.EventEmitter {
         })
         .then((response) => {
           var access_token = "";
-          if (response.data.access) {
-            access_token = response.data.access;
-            this.setSession(access_token);
-            axios.get(jwtServiceConfig.getCurrentUser)
-              .then((response) => {
-                var user = {};
-                user = {
-                  "data": {
-                    "displayName": response.data.first_name + " " + response.data.last_name,
-                    "email": response.data.email,
-                    "photoUrl": "assets/images/avatars/brain-hughes.jpg",
-                    "settings": {
-                      "layout": {},
-                      "theme": {}
-                    },
-                    "shortcuts": [
-                      "apps.calendar",
-                      "apps.mailbox",
-                      "apps.contacts"
-                    ]
-                  },
-                  "from": "wdoinstitution",
-                  "role": this.generateRole(response.data),
-                  "uuid": access_token.user_id
-                }
-                resolve(user);
-                this.emit('onLogin', user);
-              })
-              .catch((error) => {
-                this.logout();
-                reject(new Error('Failed to get user data.'));
-              })
+          var user_data = response.data;
+          this.setSession(user_data.access);
+          var user = {
+            "data": {
+              "displayName": user_data.first_name + " " + user_data.last_name,
+              "email": user_data.email,
+              "photoUrl": "assets/images/avatars/brain-hughes.jpg",
+              "settings": {
+                "layout": {},
+                "theme": {}
+              },
+              "shortcuts": [
+                "apps.calendar",
+                "apps.mailbox",
+                "apps.contacts"
+              ]
+            },
+            "from": "wdoinstitution",
+            "role": this.generateRole(user_data),
+            "uuid": access_token.user_id
           }
+          resolve(user);
+          this.emit('onLogin', user);
         })
         .catch((error) => {
-          reject(error.response.data.detail);
+          console.log(error);
+          reject(error.response.msg);
         })
     });
   };
