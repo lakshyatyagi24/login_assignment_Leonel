@@ -24,6 +24,7 @@ import axios from '../../../axios-order';
 import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import { showMessage } from 'app/store/fuse/messageSlice';
+import { authRoles } from 'src/app/auth';
 
 /**
  * Form Validation Schema
@@ -40,16 +41,28 @@ const schema = yup.object().shape({
   acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
 });
 
-
 const defaultValues = {
   firstName: '',
   lastName: '',
   email: '',
   password: '',
   passwordConfirm: '',
+  role: 'student',
   image: null,
   acceptTermsConditions: false,
 };
+
+const roles = [
+  'boss',
+  'ceo',
+  'superadmin',
+  'admin',
+  'manager',
+  'teamleader',
+  'employee',
+  'teacher',
+  'student'
+]
 
 function SignUpPage() {
   const dispatch = useDispatch();
@@ -61,14 +74,15 @@ function SignUpPage() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
-  function onSubmit({ firstName, lastName, password, email }) {
+  function onSubmit({ firstName, lastName, password, email, role }) {
     jwtService
       .createUser({
         first_name: firstName,
         last_name: lastName,
         password: password,
         re_password: password,
-        email: email
+        email: email,
+        role: role
       })
       .then((user) => {
         dispatch(
@@ -86,7 +100,7 @@ function SignUpPage() {
         console.log(error);
         dispatch(
           showMessage({
-            message: `Registration has been failed\n${JSON.stringify(error.response.data)}`,//text or html
+            message: `Registration has been failed ${JSON.stringify(error.response.data.msg)}`,//text or html
             autoHideDuration: 6000,//ms
             anchorOrigin: {
               vertical: 'top',//top bottom
@@ -206,6 +220,30 @@ function SignUpPage() {
                   required
                   fullWidth
                 />
+              )}
+            />
+
+            <Controller
+              name="role"
+              sx={{ m: 1, minWidth: 120 }}
+              control={control}
+              render={({ field }) => (
+                <div>
+                  <Select
+                    labelId="demo-simple-select-helper-label"
+                    id="demo-simple-select-helper"
+                    value={defaultValues.role}
+                    {...field}
+                    error={!!errors.role}
+                    fullWidth
+                  >
+                    {
+                      roles.map((r, index) => (
+                        <MenuItem value={r} key={index}>{r}</MenuItem>
+                      ))
+                    }
+                  </Select>
+                </div>
               )}
             />
 

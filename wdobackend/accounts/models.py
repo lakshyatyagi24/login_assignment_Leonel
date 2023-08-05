@@ -300,7 +300,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
             self.address.save()
         if self.document_upload is not None:
             self.document_upload.save()
-        self.status = 'pending'
+        if self.status is None:
+            self.status = 'pending'
 
         # call the parent class's save method
         super().save(*args, **kwargs)
