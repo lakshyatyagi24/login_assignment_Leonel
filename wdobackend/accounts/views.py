@@ -153,3 +153,21 @@ def signup(request):
     user_account.set_password(data.get('password'))
     user_account.save()
     return Response( user_account.to_dict(), status=200 )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_status(request):
+    if request.data.get('id') is None:
+        return JsonResponse({'msg': 'Please provide id'})
+    
+    try:
+        user = UserAccount.objects.get(id=request.data.get('id'))
+        if roles.index(request.user.role) >= roles.index(user.role):
+            return JsonResponse({'msg': 'You are not allowed to change user state'})
+
+    except UserAccount.DoesNotExist:
+        return JsonResponse({'msg': 'That user does not exist'})
+
+    user.status = request.data.get('status')
+
+    return Response( { 'msg': 'Changing status successfully changed' }, status=200 )
