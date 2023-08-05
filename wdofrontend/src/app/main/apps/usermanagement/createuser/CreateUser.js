@@ -15,6 +15,9 @@ import { Box } from '@mui/system';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import StepInfo from './StepInfo';
 import CreateUserProgress from './CreateUserProgress';
+import { useDispatch } from 'react-redux';
+import { showMessage } from 'app/store/fuse/messageSlice';
+import jwtService from '../../../../auth/services/jwtService';
 
 import Page1 from './subpages/Page1';
 import Page2 from './subpages/Page2';
@@ -23,25 +26,69 @@ import Page4 from './subpages/Page4';
 import Page5 from './subpages/Page5';
 
 function CreateUser() {
+
+  const [userData, setData] = useState({
+    send: 0
+  });
+
   const [usersteps, setSteps] = useState({
     title: "Create A New User",
     steps: [
       { order: 0, title: 'Personal Details', subtitle: 'Enter your Personal details' },
       { order: 1, title: 'Qualification Details', subtitle: 'Enter your Qualification details' },
       { order: 2, title: 'Address', subtitle: 'Enter your Address' },
-      { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' },
-      { order: 4, title: 'Document Upload', subtitle: 'Enter your Document upload' },
+      { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' }
     ],
     currentStep: 1,
-    totalSteps: 5,
+    totalSteps: 4,
   });
 
+  const dispatch = useDispatch();
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
-  const theme = useTheme();
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(!isMobile);
   const pageLayout = useRef(null);
   const currentStep = usersteps.currentStep;
   const childComponentRef = useRef(null);
+
+  if (userData.send == 1) {
+    jwtService
+      .createCustomUser(userData)
+      .then((user) => {
+
+        setData(prevState => ({
+          send: 0
+        }))
+
+        setSteps(prevState => ({
+          ...prevState,
+          currentStep: 1
+        }))
+
+        dispatch(
+          showMessage({
+            message: 'Successfully created!',//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'success'//success error info warning null
+          }))
+      })
+      .catch((error) => {
+        console.log(error);
+        dispatch(
+          showMessage({
+            message: `creation has been failed`,//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'error'//success error info warning null
+          }))
+      });
+  }
 
   function updateCurrentStep(index) {
     if (index > usersteps.totalSteps || index <= 0) {
@@ -56,8 +103,47 @@ function CreateUser() {
 
   function handleNext() {
     var data = childComponentRef.current.childFunction();
-    console.log(data);
-    if(data == 0) { return }
+    if (data == 0) { return }
+    switch (usersteps.currentStep) {
+      case 1:
+        setData(prevState => ({
+          ...prevState,
+          personal_details: data
+        }))
+        break;
+      case 2:
+        setData(prevState => ({
+          ...prevState,
+          qualification_details: data
+        }))
+        break;
+      case 3:
+        setData(prevState => ({
+          ...prevState,
+          address: data
+        }))
+        break;
+      case 4:
+        setData(prevState => ({
+          ...prevState,
+          industry_experience: data,
+          document_upload: {
+            "tenth_marksheet": "tenth_marksheet",
+            "twelfth_marksheet": "twelfth_marksheet",
+            "aadhar_card": "1111222233334444",
+            "alternative_card": "1111222233334444",
+            "bank_passbook": "Bank Passbook",
+            "graduation": "Diploma",
+            "post_graduation": "Post Graduation",
+            "experience_certificate": "Experience Certificate"
+          }
+          ,
+          send: 1
+        }))
+        break;
+      default:
+        break;
+    }
     updateCurrentStep(currentStep + 1);
   }
 
@@ -73,23 +159,18 @@ function CreateUser() {
 
   let mainContent = null;
 
-  console.log(usersteps.currentStep);
-
   switch (usersteps.currentStep) {
     case 1:
       mainContent = <Page1 ref={childComponentRef} />
       break;
     case 2:
-      mainContent = <Page2 ref={childComponentRef}/>
+      mainContent = <Page2 ref={childComponentRef} />
       break;
     case 3:
-      mainContent = <Page3 ref={childComponentRef}/>
+      mainContent = <Page3 ref={childComponentRef} />
       break;
     case 4:
-      mainContent = <Page4 ref={childComponentRef}/>
-      break;
-    case 5:
-      mainContent = <Page5/>
+      mainContent = <Page4 ref={childComponentRef} />
       break;
     default:
       break;
@@ -103,7 +184,7 @@ function CreateUser() {
             {mainContent}
           </SwipeableViews>
           <Hidden lgDown>
-            <div className=" flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10" style={{position:"absolute"}}>
+            <div className=" flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10" style={{ position: "absolute" }}>
               <ButtonGroup
                 variant="contained"
                 aria-label=""
@@ -128,7 +209,8 @@ function CreateUser() {
                   endIcon={<FuseSvgIcon>heroicons-outline:arrow-narrow-right</FuseSvgIcon>}
                   onClick={handleNext}
                 >
-                  Next
+                  {usersteps.currentStep == 4 ? "Submit" : "Next"}
+
                 </Button>
               </ButtonGroup>
             </div>
