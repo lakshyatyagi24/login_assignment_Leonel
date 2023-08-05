@@ -8,7 +8,9 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.models import update_last_login
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.response import Response
+from django.contrib.sites.shortcuts import get_current_site
 import json
+from .utils import Util
 
 from .models import (
     UserPersonalDetails,
@@ -149,22 +151,46 @@ def signin(request):
 @permission_classes([])
 def signup(request):
     data = request.data
+
+    if data.get('email') is None:
+        return Response( {'msg': 'Email field must not be null'}, status=500 )
+    if data.get('role') is None:
+        return Response( {'msg': 'Role field must not be null'}, status=500 )
+        
+    try:
+        user = UserAccount.objects.get(email=data.get('email'))
+        if user is not None:
+            return Response( {'msg': 'Email address is already exists!'}, status=500 )        
+    except UserAccount.DoesNotExist:
+        flag = 1
+        
     user_account = UserAccount(
         email=data.get('email'),
         first_name=data.get('first_name'),
-        last_name=data.get('last_name'))
+        last_name=data.get('last_name'),
+        role=data.get('role'))
 
     user_account.set_password(data.get('password'))
+    user_account.status = 'pending'
     user_account.save()
-    return Response( user_account.to_dict(), status=200 )
 
-@api_view(['POST'])
+    current_site = get_current_site(request).domain
+    relativeLink = "/api/account/email-verify/"
+    absurl = 'http://'+ current_site + relativeLink + str(user_account.id)
+    email_body = 'Hi user use link below to verify your email \n' + absurl 
+    data = {'email_body': email_body,'to_email': user_account.email, 'email_subject':'Verify Your Email'}
+    
+    if Util.send_email(data) == True:
+        return Response( { 'user': user_account.to_dict(), 'msg': 'Successfully registered' }, status=200 )
+    return Response( {'user': user_account.to_dict(), 'msg': 'Verify email has not been sent'}, status=500 )
+
+@api_view(['PUT'])
 @permission_classes([IsAuthenticated])
 def change_status(request):
     if request.data.get('id') is None:
         return JsonResponse({'msg': 'Please provide id'})
-    
     try:
+        print(request.data.get('id'))
         user = UserAccount.objects.get(id=request.data.get('id'))
         if roles.index(request.user.role) >= roles.index(user.role):
             return JsonResponse({'msg': 'You are not allowed to change user state'})
@@ -175,4 +201,19 @@ def change_status(request):
     user.status = request.data.get('status')
     user.save()
 
-    return Response( { 'msg': 'Changing status successfully changed' }, status=200 )
+    return Response( { 'msg': 'Changing status successfully changed', 'data': user.to_dict() }, status=200 )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def email_verify(request):
+    return Response( { 'msg': 'success' }, status=200 )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def forgot_pass(request):
+    return Response( { 'msg': 'success' }, status=200 )
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def change_pass(request):
+    return Response( { 'msg': 'success' }, status=200 )
