@@ -20,7 +20,6 @@ const ActivateAccountPage = () => {
     jwtService
       .verify(token)
       .then((res) => {
-        console.log('--------');
         dispatch(
           showMessage({
             message: `Successed\n${res.msg}`,//text or html
@@ -31,10 +30,9 @@ const ActivateAccountPage = () => {
             },
             variant: 'success'//success error info warning null
           }))
-        // history.push('/');
+        history.push('/');
       })
       .catch((error) => {
-        console.log('sssssssssssss');
         dispatch(
           showMessage({
             message: `Failed\n${error.msg}`,//text or html
@@ -45,7 +43,7 @@ const ActivateAccountPage = () => {
             },
             variant: 'error'//success error info warning null
           }));
-        // history.push('/');
+        history.push('/');
       });
   };
 

@@ -173,8 +173,8 @@ def signup(request):
 
     user_account.set_password(data.get('password'))
     user_account.status = 'pending'
-    user_account.save()
     user_account.is_active = 0
+    user_account.save()
     signer = Signer()
 
     current_site = get_current_site(request).domain
