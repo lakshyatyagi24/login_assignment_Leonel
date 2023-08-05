@@ -29,21 +29,34 @@ const schema = yup.object().shape({
 });
 
 
-const defaultValues = {
-  name: '',
-  father_name: '',
-  mother_name: '',
-  email_address: '',
-  password: '',
-  passwordConfirm: '',
-  birthday: '',
-  phonenumber: '',
-  alter_phone: '',
-  role: 'others',
-};
+// const defaultValues = {
+//   name: '',
+//   father_name: '',
+//   mother_name: '',
+//   email_address: '',
+//   password: '',
+//   passwordConfirm: '',
+//   birthday: '',
+//   phonenumber: '',
+//   alter_phone: '',
+//   role: 'others',
+// };
 
-const Page1 = React.forwardRef((props, ref) => {
+const PersonalDetailsTab = React.forwardRef((props, ref) => {
   const user = useSelector(selectUser);
+
+  const defaultValues = {
+    name: props.personal_details.name,
+    father_name: props.personal_details.father_name,
+    mother_name: props.personal_details.mother_name,
+    email_address: props.personal_details.email,
+    password: props.personal_details.password,
+    passwordConfirm: props.personal_details.password,
+    birthday: props.personal_details.role.birthday,
+    phonenumber: props.personal_details.phonenumber,
+    alter_phone: props.personal_details.alter_phone,
+    role: props.personal_details.role
+  };
 
   const { control, formState } = useForm({
     mode: 'onChange',
@@ -266,7 +279,6 @@ const Page1 = React.forwardRef((props, ref) => {
                   <Select
                     labelId="demo-simple-select-helper-label"
                     id="demo-simple-select-helper"
-                    value={defaultValues.role}
                     {...field}
                     error={!!errors.role}
                     helperText={errors?.role?.message}
@@ -288,4 +300,4 @@ const Page1 = React.forwardRef((props, ref) => {
   );
 })
 
-export default Page1;
+export default PersonalDetailsTab;
