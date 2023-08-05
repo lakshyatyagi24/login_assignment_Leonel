@@ -50,12 +50,10 @@ const Page3 = React.forwardRef((props, ref) => {
   const childFunction = () => {
     var validater = 0;
     Object.values(control._formValues).forEach(value => {
-      console.log(value);
       if (value == '' || value == null) {
         validater = 1;
       }
     })
-    console.log("validater---------", validater);
 
     if (Object.keys(errors).length || validater) { return 0; }
 
@@ -73,7 +71,8 @@ const Page3 = React.forwardRef((props, ref) => {
         city: control._formValues.city2,
         state: control._formValues.state2,
         zip_code: control._formValues.zip_code2,
-      }
+      },
+      same_address: true,
     }
 
     return data;

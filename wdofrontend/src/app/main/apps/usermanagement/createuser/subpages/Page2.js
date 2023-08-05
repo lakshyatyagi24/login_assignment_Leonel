@@ -13,40 +13,40 @@ import TextField from '@mui/material/TextField';
 const schema = yup.object().shape({
   board_name1: yup.string().required('You must enter board_name'),
   year1: yup.string().required('You must enter year'),
-  percentage1: yup.string().required('You must enter percentage'),
-  roll_no1: yup.string().required('You must enter roll number'),
+  percentage1: yup.number().required('You must enter percentage'),
+  roll_no1: yup.number().required('You must enter roll number'),
   board_name2: yup.string().required('You must enter board_name'),
   year2: yup.string().required('You must enter year'),
-  percentage2: yup.string().required('You must enter percentage'),
-  roll_no2: yup.string().required('You must enter roll number'),
+  percentage2: yup.number().required('You must enter percentage'),
+  roll_no2: yup.number().required('You must enter roll number'),
   board_name3: yup.string().required('You must enter board_name'),
   year3: yup.string().required('You must enter year'),
-  percentage3: yup.string().required('You must enter percentage'),
-  roll_no3: yup.string().required('You must enter roll number'),
+  percentage3: yup.number().required('You must enter percentage'),
+  roll_no3: yup.number().required('You must enter roll number'),
   board_name4: yup.string().required('You must enter board_name'),
   year4: yup.string().required('You must enter year'),
-  percentage4: yup.string().required('You must enter percentage'),
-  roll_no4: yup.string().required('You must enter roll number'),
+  percentage4: yup.number().required('You must enter percentage'),
+  roll_no4: yup.number().required('You must enter roll number'),
 });
 
 
 const defaultValues = {
   board_name1: '',
-  year1: '',
-  percentage1: '',
-  roll_no1: '',
+  year1: '2000',
+  percentage1: 50,
+  roll_no1: 1,
   board_name2: '',
-  year2: '',
-  percentage2: '',
-  roll_no2: '',
+  year2: '2000',
+  percentage2: 50,
+  roll_no2: 1,
   board_name3: '',
-  year3: '',
-  percentage3: '',
-  roll_no3: '',
+  year3: '2000',
+  percentage3: 50,
+  roll_no3: 1,
   board_name4: '',
-  year4: '',
-  percentage4: '',
-  roll_no4: '',
+  year4: '2000',
+  percentage4: 50,
+  roll_no4: 1,
 };
 
 const Page2 = React.forwardRef((props, ref) => {
@@ -155,7 +155,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Percentage"
                     autoFocus
-                    type="name"
+                    type="number"
                     error={!!errors.percentage1}
                     helperText={errors?.percentage1?.message}
                     variant="outlined"
@@ -175,7 +175,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Total Year of Experience"
                     autoFocus
-                    type="Roll Number"
+                    type="number"
                     error={!!errors.roll_no1}
                     helperText={errors?.roll_no1?.message}
                     variant="outlined"
@@ -240,7 +240,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Percentage"
                     autoFocus
-                    type="name"
+                    type="number"
                     error={!!errors.percentage2}
                     helperText={errors?.percentage2?.message}
                     variant="outlined"
@@ -260,7 +260,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Total Year of Experience"
                     autoFocus
-                    type="Roll Number"
+                    type="number"
                     error={!!errors.roll_no2}
                     helperText={errors?.roll_no2?.message}
                     variant="outlined"
@@ -325,7 +325,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Percentage"
                     autoFocus
-                    type="name"
+                    type="number"
                     error={!!errors.percentage3}
                     helperText={errors?.percentage3?.message}
                     variant="outlined"
@@ -345,7 +345,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Total Year of Experience"
                     autoFocus
-                    type="Roll Number"
+                    type="number"
                     error={!!errors.roll_no3}
                     helperText={errors?.roll_no3?.message}
                     variant="outlined"
@@ -410,7 +410,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Percentage"
                     autoFocus
-                    type="name"
+                    type="number"
                     error={!!errors.percentage4}
                     helperText={errors?.percentage4?.message}
                     variant="outlined"
@@ -430,7 +430,7 @@ const Page2 = React.forwardRef((props, ref) => {
                     className="mb-24"
                     label="Total Year of Experience"
                     autoFocus
-                    type="Roll Number"
+                    type="number"
                     error={!!errors.roll_no4}
                     helperText={errors?.roll_no4?.message}
                     variant="outlined"

@@ -59,6 +59,18 @@ class JwtService extends FuseUtils.EventEmitter {
     })
   };
 
+  createCustomUser = (data) => {
+    return new Promise((resolve, reject) => {
+      axios.post(jwtServiceConfig.createCustomUser, data)
+        .then((response) => {
+          resolve(response.data)
+        })
+        .catch((error) => {
+          reject(error)
+        })
+    })
+  };
+
   generateRole = (data) => {
     let role = data.role;
 
