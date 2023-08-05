@@ -128,13 +128,16 @@ def signin(request):
     user = authenticate(email=email, password=password)
 
     if user is None:
-        return JsonResponse( { 'msg': 'A user with this email and password is not found.' }, status=500 )
+        return Response( { 'msg': 'A user with this email and password is not found.' }, status=500 )
 
     try:
         jwt_token = RefreshToken.for_user(user)
         update_last_login(None, user)
     except UserAccount.DoesNotExist:
-        return JsonResponse( { 'msg': 'User with given email and password does not exists' } )
+        return Response( { 'msg': 'User with given email and password does not exists' }, status=500 )
+
+    if user.status != 'active':
+        return Response( { 'msg': 'Your user is not allowed to login. Contact to administrator' }, status=500 )
 
     ret = {
         'msg': 'Uesr logged in successfully',
