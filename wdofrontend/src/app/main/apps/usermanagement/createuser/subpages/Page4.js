@@ -30,30 +30,20 @@ import Cookies from 'js-cookie';
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  firstName: yup.string().required('You must enter First name'),
-  lastName: yup.string().required('You must enter Last name'),
-  email: yup.string().email('You must enter a valid email').required('You must enter a email'),
-  password: yup
-    .string()
-    .required('Please enter your password.')
-    .min(8, 'Password is too short - should be 8 chars minimum.'),
-  passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
+  industry_name: yup.string().required('You must enter industry_name'),
+  designation: yup.string().required('You must enter designation'),
+  salary: yup.string().required('You must enter salary'),
+  user_experiences: yup.string().required('You must enter experience'),
 });
 
 
 const defaultValues = {
   industry_name: "",
   designation: "",
-  salary: 0,
-  user_experiences: 0
 };
 
-function Page4() {
-
-  const [paneCount, setState] = useState(1);
-
-  const {control, formState} = useForm({
+const Page4 = React.forwardRef((props, ref) => {
+  const { control, formState } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
@@ -61,26 +51,113 @@ function Page4() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
+  const childFunction = () => {
+    var validater = 0;
+    Object.values(control._formValues).forEach(value => {
+      if (value == '' || value == null) {
+        validater = 1;
+      }
+    })
+    if (Object.keys(errors).length || validater) { return 0; }
+    return control._formValues; 
+  }
+
+  React.useImperativeHandle(ref, () => ({
+    childFunction
+  }));
+
+
   return (
     <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
       <form>
         <Grid container spacing={2}>
-          
-          {pane}
-          <Grid item xs={1}>
-            <Button variant="contained" color="success">
-              +Add
-            </Button>
-          </Grid>
-          <Grid item xs={1}>
-            <Button variant="contained" color="warning">
-              -Delete
-            </Button>
+
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <Controller
+                name="industry_name"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Industry Name"
+                    autoFocus
+                    type="name"
+                    error={!!errors.industry_name}
+                    helperText={errors?.industry_name?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="designation"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Designation"
+                    autoFocus
+                    type="name"
+                    error={!!errors.designation}
+                    helperText={errors?.designation?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="salary"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Salary"
+                    autoFocus
+                    type="number"
+                    error={!!errors.salary}
+                    helperText={errors?.salary?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="user_experiences"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Total Year of Experience"
+                    autoFocus
+                    type="number"
+                    error={!!errors.user_experiences}
+                    helperText={errors?.user_experiences?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
           </Grid>
         </Grid>
       </form>
     </Box>
   );
-}
+})
 
 export default Page4;
