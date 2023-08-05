@@ -61,6 +61,90 @@ function Page4() {
 
   const { isValid, dirtyFields, errors, setError } = formState;
 
+  const pane =
+    (<Grid container spacing={1}>
+      <Grid item xs={3}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-24"
+              label="Industry Name"
+              autoFocus
+              type="name"
+              error={!!errors.name}
+              helperText={errors?.name?.message}
+              variant="outlined"
+              required
+              fullWidth
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-24"
+              label="Designation"
+              autoFocus
+              type="name"
+              error={!!errors.name}
+              helperText={errors?.name?.message}
+              variant="outlined"
+              required
+              fullWidth
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-24"
+              label="Salary"
+              autoFocus
+              type="number"
+              error={!!errors.name}
+              helperText={errors?.name?.message}
+              variant="outlined"
+              required
+              fullWidth
+            />
+          )}
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <Controller
+          name="name"
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              className="mb-24"
+              label="Total Year of Experience"
+              autoFocus
+              type="number"
+              error={!!errors.name}
+              helperText={errors?.name?.message}
+              variant="outlined"
+              required
+              fullWidth
+            />
+          )}
+        />
+      </Grid>
+    </Grid>);
+
   return (
     <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
       <form>

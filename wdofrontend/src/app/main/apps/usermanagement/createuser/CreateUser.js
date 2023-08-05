@@ -77,7 +77,7 @@ function CreateUser() {
 
   switch (usersteps.currentStep) {
     case 1:
-      mainContent = <Page1 ref={childComponentRef}/>
+      mainContent = <Page1 ref={childComponentRef} />
       break;
     case 2:
       mainContent = <Page2 ref={childComponentRef}/>
