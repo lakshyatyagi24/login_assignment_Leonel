@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Controller, useForm, useFormContext } from 'react-hook-form';
 import Grid from '@mui/material/Grid';
@@ -25,6 +25,7 @@ import Paper from '@mui/material/Paper';
 import FormHelperText from '@mui/material/FormHelperText';
 
 import Cookies from 'js-cookie';
+import SubPage4 from './SubPage4';
 
 /**
  * Form Validation Schema
@@ -36,126 +37,69 @@ const schema = yup.object().shape({
   user_experiences: yup.string().required('You must enter experience'),
 });
 
-
-const defaultValues = {
-  industry_name: "",
-  designation: "",
-};
-
 const Page4 = React.forwardRef((props, ref) => {
-  const { control, formState } = useForm({
-    mode: 'onChange',
-    defaultValues,
-    resolver: yupResolver(schema),
-  });
 
-  const { isValid, dirtyFields, errors, setError } = formState;
+  const [paneData, setData] = useState([]);
+
+  const childComponentRef = useRef(null);
+  const [paneCount, setCount] = useState(1)
 
   const childFunction = () => {
-    var validater = 0;
-    Object.values(control._formValues).forEach(value => {
-      if (value == '' || value == null) {
-        validater = 1;
-      }
-    })
-    if (Object.keys(errors).length || validater) { return 0; }
-    return control._formValues; 
+    var data = childComponentRef.current.childFunction();
+    if (data == 0) { return 0 }
+    var prevPaneData = paneData;
+    prevPaneData.push(data);
+    return prevPaneData;
   }
 
   React.useImperativeHandle(ref, () => ({
     childFunction
   }));
 
+  const addPane = () => {
+    var count = paneCount + 1;
+    if (count < 7) {
+      var data = childComponentRef.current.childFunction();
+      if (data == 0) { return }
+      setCount(count);
+      var prevPaneData = paneData;
+      prevPaneData.push(data);
+      setData(prevPaneData);
+    }
+  }
+
+  const deletePane = () => {
+    var count = paneCount;
+    if (count > 1) {
+      setCount(count - 1);
+      var prevPaneData = paneData.slice(0, count - 1);
+      setData(prevPaneData);
+    }
+  }
 
   return (
     <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
       <form>
-        <Grid container spacing={2}>
-
-          <Grid container spacing={1}>
-            <Grid item xs={3}>
-              <Controller
-                name="industry_name"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    className="mb-24"
-                    label="Industry Name"
-                    autoFocus
-                    type="name"
-                    error={!!errors.industry_name}
-                    helperText={errors?.industry_name?.message}
-                    variant="outlined"
-                    required
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Controller
-                name="designation"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    className="mb-24"
-                    label="Designation"
-                    autoFocus
-                    type="name"
-                    error={!!errors.designation}
-                    helperText={errors?.designation?.message}
-                    variant="outlined"
-                    required
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Controller
-                name="salary"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    className="mb-24"
-                    label="Salary"
-                    autoFocus
-                    type="number"
-                    error={!!errors.salary}
-                    helperText={errors?.salary?.message}
-                    variant="outlined"
-                    required
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={3}>
-              <Controller
-                name="user_experiences"
-                control={control}
-                render={({ field }) => (
-                  <TextField
-                    {...field}
-                    className="mb-24"
-                    label="Total Year of Experience"
-                    autoFocus
-                    type="number"
-                    error={!!errors.user_experiences}
-                    helperText={errors?.user_experiences?.message}
-                    variant="outlined"
-                    required
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
+        {
+          new Array(paneCount).fill(0).map((val, index) => {
+            return (
+              <SubPage4 key={index} ref={childComponentRef} />
+            )
+          })
+        }
       </form>
+      <Grid container spacing={1}>
+        <Grid item xs={1}>
+          <Button variant="contained" color="success" onClick={addPane}>
+            +Add
+          </Button>
+          <Grid />
+        </Grid><Grid item xs={1}>
+          <Button variant="contained" color="error" onClick={deletePane}>
+            -Delete
+          </Button>
+        </Grid>
+      </Grid >
     </Box>
   );
 })
