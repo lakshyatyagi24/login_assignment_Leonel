@@ -3,6 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth import authenticate
+
+from django.contrib.auth.models import update_last_login
+from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.response import Response
 import json
 
 from .models import (
@@ -109,3 +114,46 @@ def get_user_information(request):
     json_data = user.to_dict()
 
     return JsonResponse( json_data, status=200 )
+
+@api_view(['POST'])
+@permission_classes([])
+def signin(request):
+    data = request.data
+    email = data.get('email', None)
+    password = data.get('password', None)
+
+    user = authenticate(email=email, password=password)
+
+    if user is None:
+        return JsonResponse( { 'msg': 'A user with this email and password is not found.' }, status=500 )
+
+    try:
+        jwt_token = RefreshToken.for_user(user)
+        update_last_login(None, user)
+    except UserAccount.DoesNotExist:
+        return JsonResponse( { 'msg': 'User with given email and password does not exists' } )
+
+    ret = {
+        'msg': 'Uesr logged in successfully',
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'role': user.role,
+        'status': user.status,
+        'access': str(jwt_token.access_token)
+    }
+
+    return Response( ret, status=200 )
+
+@api_view(['POST'])
+@permission_classes([])
+def signup(request):
+    data = request.data
+    user_account = UserAccount(
+        email=data.get('email'),
+        first_name=data.get('first_name'),
+        last_name=data.get('last_name'))
+
+    user_account.set_password(data.get('password'))
+    user_account.save()
+    return Response( user_account.to_dict(), status=200 )
