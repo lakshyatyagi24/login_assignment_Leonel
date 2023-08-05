@@ -1,180 +1,450 @@
 import * as React from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
+import { Controller, useForm} from 'react-hook-form';
 import Grid from '@mui/material/Grid';
-import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
-import { lighten } from '@mui/material/styles';
-import FuseUtils from '@fuse/utils';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import { Link } from 'react-router-dom';
 import * as yup from 'yup';
 import _ from '@lodash';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import FormHelperText from '@mui/material/FormHelperText';
-import Cookies from 'js-cookie';
+import TextField from '@mui/material/TextField';
 
 /**
  * Form Validation Schema
  */
 const schema = yup.object().shape({
-  firstName: yup.string().required('You must enter First name'),
-  lastName: yup.string().required('You must enter Last name'),
-  email: yup.string().email('You must enter a valid email').required('You must enter a email'),
-  password: yup
-    .string()
-    .required('Please enter your password.')
-    .min(8, 'Password is too short - should be 8 chars minimum.'),
-  passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-  acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
+  board_name1: yup.string().required('You must enter board_name'),
+  year1: yup.string().required('You must enter year'),
+  percentage1: yup.string().required('You must enter percentage'),
+  roll_no1: yup.string().required('You must enter roll number'),
+  board_name2: yup.string().required('You must enter board_name'),
+  year2: yup.string().required('You must enter year'),
+  percentage2: yup.string().required('You must enter percentage'),
+  roll_no2: yup.string().required('You must enter roll number'),
+  board_name3: yup.string().required('You must enter board_name'),
+  year3: yup.string().required('You must enter year'),
+  percentage3: yup.string().required('You must enter percentage'),
+  roll_no3: yup.string().required('You must enter roll number'),
+  board_name4: yup.string().required('You must enter board_name'),
+  year4: yup.string().required('You must enter year'),
+  percentage4: yup.string().required('You must enter percentage'),
+  roll_no4: yup.string().required('You must enter roll number'),
 });
 
 
 const defaultValues = {
-  name: '',
-  fatherName: '',
-  motherName: '',
-  email: '',
-  password: '',
-  passwordConfirm: '',
-  birthday: '',
-  phone: '',
-  alterPhone: '',
-  role: '10',
-  image: null,
-  acceptTermsConditions: false,
+  board_name1: '',
+  year1: '',
+  percentage1: '',
+  roll_no1: '',
+  board_name2: '',
+  year2: '',
+  percentage2: '',
+  roll_no2: '',
+  board_name3: '',
+  year3: '',
+  percentage3: '',
+  roll_no3: '',
+  board_name4: '',
+  year4: '',
+  percentage4: '',
+  roll_no4: '',
 };
 
-function Page2() {
-  const { control, formState, handleSubmit, reset } = useForm({
+const Page2 = React.forwardRef((props, ref) => {
+  const { control, formState } = useForm({
     mode: 'onChange',
     defaultValues,
     resolver: yupResolver(schema),
   });
 
-  const { isValid, dirtyFields, errors, setError } = formState;
+  const { errors } = formState;
 
-  function onSubmit({ firstName, lastName, password, email }) {
-    const csrfToken = Cookies.get('csrftoken');
-
-    console.log(firstName, lastName, password, email);
-
-    let formData = {
-      first_name: firstName,
-      last_name: lastName,
-      password: password,
-      re_password: password,
-      email: email
-    };
+  const childFunction = () => {
+    var validater = 0;
+    Object.values(control._formValues).forEach(value => {
+      if (value == '' || value == null) {
+        validater = 1;
+      }
+    })
+    if (Object.keys(errors).length || validater) { return 0; }
+    const data = {
+      tenth: {
+          board_name: control._formValues.board_name1,
+          year: control._formValues.year1,
+          percentage: control._formValues.percentage1,
+          roll_no: control._formValues.roll_no1
+      },
+      twelfth: {
+        board_name: control._formValues.board_name2,
+        year: control._formValues.year2,
+        percentage: control._formValues.percentage2,
+        roll_no: control._formValues.roll_no2
+    },
+      university: {
+        board_name: control._formValues.board_name3,
+        year: control._formValues.year3,
+        percentage: control._formValues.percentage3,
+        roll_no: control._formValues.roll_no3
+    },
+      other: {
+        board_name: control._formValues.board_name4,
+        year: control._formValues.year4,
+        percentage: control._formValues.percentage4,
+        roll_no: control._formValues.roll_no4
+    },
+    }
+    return data;
   }
 
-  const names = ["10th", "12th", "University Qualification", "Other Qualification (Optional)"]
+  React.useImperativeHandle(ref, () => ({
+    childFunction
+  }));
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      {
-        names.map((title) => (
-          <Box sx={{ flexGrow: 1 }}>
-          <h2>{title}</h2>
+  <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+      <form>
+        <Box sx={{ flexGrow: 0 }}>
+          <h2>10th</h2>
           <Grid container spacing={1}>
-                <Grid item xs={3}>
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                className="mb-24"
-                                label="Board Name"
-                                autoFocus
-                                type="name"
-                                error={!!errors.name}
-                                helperText={errors?.name?.message}
-                                variant="outlined"
-                                required
-                                fullWidth
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                className="mb-24"
-                                label="Qualification Name"
-                                autoFocus
-                                type="name"
-                                error={!!errors.name}
-                                helperText={errors?.name?.message}
-                                variant="outlined"
-                                required
-                                fullWidth
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                className="mb-24"
-                                label="Percentage"
-                                autoFocus
-                                type="name"
-                                error={!!errors.name}
-                                helperText={errors?.name?.message}
-                                variant="outlined"
-                                required
-                                fullWidth
-                            />
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="name"
-                        control={control}
-                        render={({ field }) => (
-                            <TextField
-                                {...field}
-                                className="mb-24"
-                                label="Total Year of Experience"
-                                autoFocus
-                                type="Roll Number"
-                                error={!!errors.name}
-                                helperText={errors?.name?.message}
-                                variant="outlined"
-                                required
-                                fullWidth
-                            />
-                        )}
-                    />
-                </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="board_name1"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Board Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.board_name1}
+                    helperText={errors?.board_name1?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
             </Grid>
-            </Box>
-        ))
-      }
-
+            <Grid item xs={3}>
+              <Controller
+                name="year1"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Qualification Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.year1}
+                    helperText={errors?.year1?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="percentage1"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Percentage"
+                    autoFocus
+                    type="name"
+                    error={!!errors.percentage1}
+                    helperText={errors?.percentage1?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="roll_no1"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Total Year of Experience"
+                    autoFocus
+                    type="Roll Number"
+                    error={!!errors.roll_no1}
+                    helperText={errors?.roll_no1?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          <h2>12th</h2>
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <Controller
+                name="board_name2"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Board Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.board_name2}
+                    helperText={errors?.board_name2?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="year2"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Qualification Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.year2}
+                    helperText={errors?.year2?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="percentage2"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Percentage"
+                    autoFocus
+                    type="name"
+                    error={!!errors.percentage2}
+                    helperText={errors?.percentage2?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="roll_no2"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Total Year of Experience"
+                    autoFocus
+                    type="Roll Number"
+                    error={!!errors.roll_no2}
+                    helperText={errors?.roll_no2?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          <h2>University Qualification</h2>
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <Controller
+                name="board_name3"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Board Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.board_name3}
+                    helperText={errors?.board_name3?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="year3"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Qualification Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.year3}
+                    helperText={errors?.year3?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="percentage3"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Percentage"
+                    autoFocus
+                    type="name"
+                    error={!!errors.percentage3}
+                    helperText={errors?.percentage3?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="roll_no3"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Total Year of Experience"
+                    autoFocus
+                    type="Roll Number"
+                    error={!!errors.roll_no3}
+                    helperText={errors?.roll_no3?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+        <Box sx={{ flexGrow: 0 }}>
+          <h2>Other Qualification (Optional)</h2>
+          <Grid container spacing={1}>
+            <Grid item xs={3}>
+              <Controller
+                name="board_name4"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Board Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.board_name4}
+                    helperText={errors?.board_name4?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="year4"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Qualification Name"
+                    autoFocus
+                    type="string"
+                    error={!!errors.year4}
+                    helperText={errors?.year4?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="percentage4"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Percentage"
+                    autoFocus
+                    type="name"
+                    error={!!errors.percentage4}
+                    helperText={errors?.percentage4?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <Controller
+                name="roll_no4"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    className="mb-24"
+                    label="Total Year of Experience"
+                    autoFocus
+                    type="Roll Number"
+                    error={!!errors.roll_no4}
+                    helperText={errors?.roll_no4?.message}
+                    variant="outlined"
+                    required
+                    fullWidth
+                  />
+                )}
+              />
+            </Grid>
+          </Grid>
+        </Box>
+      </form>
     </Box>
   );
-}
+})
 
 export default Page2;

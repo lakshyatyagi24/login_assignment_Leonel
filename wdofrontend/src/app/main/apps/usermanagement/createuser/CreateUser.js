@@ -2,7 +2,6 @@ import FusePageSimple from '@fuse/core/FusePageSimple';
 import { useTheme } from '@mui/material/styles';
 import Hidden from '@mui/material/Hidden';
 import IconButton from '@mui/material/IconButton';
-import Paper from '@mui/material/Paper';
 import Stepper from '@mui/material/Stepper';
 import { useRef, useState } from 'react';
 import SwipeableViews from 'react-swipeable-views';
@@ -36,11 +35,13 @@ function CreateUser() {
     currentStep: 1,
     totalSteps: 5,
   });
+
   const isMobile = useThemeMediaQuery((theme) => theme.breakpoints.down('lg'));
   const theme = useTheme();
   const [leftSidebarOpen, setLeftSidebarOpen] = useState(!isMobile);
   const pageLayout = useRef(null);
   const currentStep = usersteps.currentStep;
+  const childComponentRef = useRef(null);
 
   function updateCurrentStep(index) {
     if (index > usersteps.totalSteps || index <= 0) {
@@ -54,6 +55,9 @@ function CreateUser() {
   }
 
   function handleNext() {
+    var data = childComponentRef.current.childFunction();
+    console.log(data);
+    if(data == 0) { return }
     updateCurrentStep(currentStep + 1);
   }
 
@@ -73,69 +77,19 @@ function CreateUser() {
 
   switch (usersteps.currentStep) {
     case 1:
-      mainContent = (<div
-        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
-      >
-        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-          <div
-            className="prose prose-sm dark:prose-invert w-full max-w-full"
-            dir={theme.direction}
-          />
-          <Page1 />
-        </Paper>
-      </div>);
+      mainContent = <Page1 ref={childComponentRef}/>
       break;
     case 2:
-      mainContent = (<div
-        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
-      >
-        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-          <div
-            className="prose prose-sm dark:prose-invert w-full max-w-full"
-            dir={theme.direction}
-          />
-          <Page2 />
-        </Paper>
-      </div>);
+      mainContent = <Page2 ref={childComponentRef}/>
       break;
     case 3:
-      mainContent = (<div
-        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
-      >
-        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-          <div
-            className="prose prose-sm dark:prose-invert w-full max-w-full"
-            dir={theme.direction}
-          />
-          <Page3 />
-        </Paper>
-      </div>);
+      mainContent = <Page3 ref={childComponentRef}/>
       break;
     case 4:
-      mainContent = (<div
-        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
-      >
-        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-          <div
-            className="prose prose-sm dark:prose-invert w-full max-w-full"
-            dir={theme.direction}
-          />
-          <Page4 />
-        </Paper>
-      </div>);
+      mainContent = <Page4 ref={childComponentRef}/>
       break;
     case 5:
-      mainContent = (<div
-        className="flex justify-center p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16"
-      >
-        <Paper className="w-full mx-auto sm:my-8 lg:mt-16 p-24 sm:p-40 sm:py-48 rounded-16 shadow overflow-hidden">
-          <div
-            className="prose prose-sm dark:prose-invert w-full max-w-full"
-            dir={theme.direction}
-          />
-          <Page5 />
-        </Paper>
-      </div>);
+      mainContent = <Page5/>
       break;
     default:
       break;
@@ -149,7 +103,7 @@ function CreateUser() {
             {mainContent}
           </SwipeableViews>
           <Hidden lgDown>
-            <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
+            <div className=" flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10" style={{position:"absolute"}}>
               <ButtonGroup
                 variant="contained"
                 aria-label=""
@@ -235,7 +189,6 @@ function CreateUser() {
                       fontSize: 13,
                     },
                   }}
-                  onClick={() => handleStepChange(step.order)}
                   expanded
                 >
                   <StepLabel
