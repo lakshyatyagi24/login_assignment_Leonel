@@ -25,6 +25,8 @@ import Cookies from 'js-cookie';
 import { useDispatch } from 'react-redux';
 import { showMessage } from 'app/store/fuse/messageSlice';
 import { authRoles } from 'src/app/auth';
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 /**
  * Form Validation Schema
@@ -65,6 +67,7 @@ const roles = [
 ]
 
 function SignUpPage() {
+  const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
@@ -75,6 +78,7 @@ function SignUpPage() {
   const { isValid, dirtyFields, errors, setError } = formState;
 
   function onSubmit({ firstName, lastName, password, email, role }) {
+    setOpen(true);
     jwtService
       .createUser({
         first_name: firstName,
@@ -85,6 +89,7 @@ function SignUpPage() {
         role: role
       })
       .then((user) => {
+        setOpen(false);
         dispatch(
           showMessage({
             message: 'Successfully registered! Check email box and verify your user!',//text or html
@@ -97,7 +102,7 @@ function SignUpPage() {
           }))
       })
       .catch((error) => {
-        console.log(error);
+        setOpen(false);
         dispatch(
           showMessage({
             message: `Registration has been failed ${JSON.stringify(error.response.data.msg)}`,//text or html
@@ -113,6 +118,12 @@ function SignUpPage() {
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
+      <Backdrop
+        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={open}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Paper className="h-full sm:h-auto md:flex md:items-center md:justify-end w-full sm:w-auto md:h-full md:w-1/2 py-8 px-16 sm:p-48 md:p-64 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none ltr:border-r-1 rtl:border-l-1">
         <div className="w-full max-w-320 sm:w-320 mx-auto sm:mx-0">
           <img className="w-100" src="assets/images/logo/wdo-logo01.png" alt="logo" />

@@ -68,7 +68,7 @@ function SignInPage() {
       .catch((error) => {
         dispatch(
           showMessage({
-            message: `Login failed\n${JSON.stringify(error)}`,//text or html
+            message: `Login failed\n${JSON.stringify(error.msg)}`,//text or html
             autoHideDuration: 6000,//ms
             anchorOrigin: {
               vertical: 'top',//top bottom
