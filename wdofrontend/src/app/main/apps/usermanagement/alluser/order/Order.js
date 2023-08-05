@@ -14,18 +14,14 @@ import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import useThemeMediaQuery from '@fuse/hooks/useThemeMediaQuery';
 import reducer from '../store';
 import { getUser, getOrder, resetOrder, selectOrder } from '../store/orderSlice';
-// import InvoiceTab from './tabs/InvoiceTab';
-// import OrderDetailsTab from './tabs/OrderDetailsTab';
-// import ProductsTab from './tabs/ProductsTab';
-// import { ButtonGroup } from '@mui/material';
-// import { orderStatuses } from './OrdersStatus';
-import Stack from '@mui/material/Stack';
 import jwbServiceConfig from "../../../../../../app/auth/services/jwtService/jwtServiceConfig";
 import axios from 'axios';
 import PersonalDetailsTab from './tabs/PersonalDetailsTab';
 import QualificationDetailsTab from './tabs/QualificationDetailsTab';
 import AddressDetailsTab from './tabs/AddressDetailsTab';
 import IndustryExperienceDetails from './tabs/IndustryExperienceDetails';
+import { ButtonGroup } from '@mui/material';
+import { showMessage } from 'app/store/fuse/messageSlice';
 
 function Order(props) {
   const dispatch = useDispatch();
@@ -60,11 +56,35 @@ function Order(props) {
   }
 
   function onChangeStatus(status) {
-    axios.post(jwbServiceConfig.changeUserStatus, { id: userId, status: status })
+    axios.put(jwbServiceConfig.changeUserStatus, { id: userId, status: status })
       .then((response) => {
+        dispatch(
+          showMessage({
+            message: `The Status is changed successfully`,//text or html
+            autoHideDuration: 1000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'success'//success error info warning null
+          }));
+        dispatch(getUser(userId)).then((action) => {
+          if (!action.payload) {
+            setNoOrder(true);
+          }
+        });
       })
       .catch((error) => {
-
+        dispatch(
+          showMessage({
+            message: `The Status is not changed successfully`,//text or html
+            autoHideDuration: 1000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'error'//success error info warning null
+          }));
       })
   }
 
@@ -135,45 +155,45 @@ function Order(props) {
               </motion.div>
               <motion.div>
                 <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
-                  <Stack variant="contained" direction="row" spacing={3}>
+                  <ButtonGroup variant="contained" direction="row" spacing={3}>
                     <Button className="bg-green text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px" }}
                       disabled={order.status.toUpperCase() == "ACTIVE"}
                       onClick={(event) => onChangeStatus("active")}>
                       ACTIVE
                     </Button>
                     <Button className="bg-blue-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px" }}
                       disabled={order.status.toUpperCase() == "PENDING"}
                       onClick={(event) => onChangeStatus("pending")}>
 
                       PENDING
                     </Button>
                     <Button className="bg-red-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px" }}
                       disabled={order.status.toUpperCase() == "REJECT"}
                       onClick={(event) => onChangeStatus("reject")}>
                       REJECT
                     </Button>
                     <Button className="bg-orange text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px" }}
                       disabled={order.status.toUpperCase() == "DEFECT"}
                       onClick={(event) => onChangeStatus("defect")}>
                       DEFECT
                     </Button>
                     <Button className="bg-purple-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px" }}
                       disabled={order.status.toUpperCase() == "INACTIVE"}
                       onClick={(event) => onChangeStatus("inactive")}>
                       INACTIVE</Button>
-                  </Stack>
+                  </ButtonGroup>
                 </div>
               </motion.div>
             </motion.div>
           </div>
         )
       }
-      content={ order &&
+      content={order &&
         <>
           <Tabs
             value={tabValue}
@@ -191,10 +211,10 @@ function Order(props) {
           </Tabs>
           {Object.assign(order)["personal_details"] && (
             <div className="w-full">
-              {tabValue === 0 && <PersonalDetailsTab personal_details={order.personal_details}/>}
-              {tabValue === 1 && <QualificationDetailsTab qualification_details={order.qualification_details}/>}
-              {tabValue === 2 && <AddressDetailsTab  address_details={order.address}/>}
-              {tabValue === 3 && <IndustryExperienceDetails/>}
+              {tabValue === 0 && <PersonalDetailsTab personal_details={order.personal_details} />}
+              {tabValue === 1 && <QualificationDetailsTab qualification_details={order.qualification_details} />}
+              {tabValue === 2 && <AddressDetailsTab address_details={order.address} />}
+              {tabValue === 3 && <IndustryExperienceDetails />}
             </div>
           )}
         </>

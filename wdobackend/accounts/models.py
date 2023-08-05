@@ -51,7 +51,7 @@ class UserPersonalDetails(models.Model):
             name=data.get("name"),
             father_name=data.get("father_name"),
             mother_name=data.get("mother_name"),
-            email_address=data.get("email"),
+            email_address=data.get("email_address"),
             password=data.get("password"),
             birthday=data.get("birthday"),
             phonenumber=data.get("phonenumber"),
