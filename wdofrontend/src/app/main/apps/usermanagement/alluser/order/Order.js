@@ -26,6 +26,7 @@ import PersonalDetailsTab from './tabs/PersonalDetailsTab';
 import QualificationDetailsTab from './tabs/QualificationDetailsTab';
 import AddressDetailsTab from './tabs/AddressDetailsTab';
 import IndustryExperienceDetails from './tabs/IndustryExperienceDetails';
+import { ButtonGroup } from '@mui/material';
 
 function Order(props) {
   const dispatch = useDispatch();
@@ -135,38 +136,38 @@ function Order(props) {
               </motion.div>
               <motion.div>
                 <div className="flex justify-center w-full sticky bottom-0 p-16 pb-32 z-10">
-                  <Stack variant="contained" direction="row" spacing={3}>
+                  <ButtonGroup variant="contained" direction="row" spacing={3}>
                     <Button className="bg-green text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px"}}
                       disabled={order.status.toUpperCase() == "ACTIVE"}
                       onClick={(event) => onChangeStatus("active")}>
                       ACTIVE
                     </Button>
                     <Button className="bg-blue-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px"}}
                       disabled={order.status.toUpperCase() == "PENDING"}
                       onClick={(event) => onChangeStatus("pending")}>
 
                       PENDING
                     </Button>
                     <Button className="bg-red-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px"}}
                       disabled={order.status.toUpperCase() == "REJECT"}
                       onClick={(event) => onChangeStatus("reject")}>
                       REJECT
                     </Button>
                     <Button className="bg-orange text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px"}}
                       disabled={order.status.toUpperCase() == "DEFECT"}
                       onClick={(event) => onChangeStatus("defect")}>
                       DEFECT
                     </Button>
                     <Button className="bg-purple-700 text-white text-40"
-                      style={{ borderRadius: "5px", border: "2px solid white" }}
+                      style={{ borderRadius: "5px"}}
                       disabled={order.status.toUpperCase() == "INACTIVE"}
                       onClick={(event) => onChangeStatus("inactive")}>
                       INACTIVE</Button>
-                  </Stack>
+                  </ButtonGroup>
                 </div>
               </motion.div>
             </motion.div>

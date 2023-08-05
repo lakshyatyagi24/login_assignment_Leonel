@@ -173,5 +173,6 @@ def change_status(request):
         return JsonResponse({'msg': 'That user does not exist'})
 
     user.status = request.data.get('status')
+    user.save()
 
     return Response( { 'msg': 'Changing status successfully changed' }, status=200 )
