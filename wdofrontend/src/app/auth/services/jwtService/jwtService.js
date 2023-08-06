@@ -86,6 +86,39 @@ class JwtService extends FuseUtils.EventEmitter {
     return role;
   }
 
+  googleAuthRequest = () => {
+    return new Promise((resolve, reject) => {
+      axios.get(jwtServiceConfig.googleAuth)
+        .then(response => {
+          resolve(response.data)
+        })
+        .catch(error => {
+          reject(error)
+        })
+    })
+  }
+
+  googleAuthenticate = ({ code, state }) => {
+    return new Promise(async (resolve, reject) => {
+      const details = { code, state };
+      const formBody = Object.keys(details)
+        .map(
+          (key) => {
+            return encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
+          }
+        )
+        .join("&");
+
+      axios.post(`${jwtServiceConfig.googleAuthenticate}?${formBody}`)
+        .then(res => {
+          resolve(res)
+        })
+        .catch(err => {
+          reject(err)
+        })
+    })
+  }
+
   signInWithEmailAndPassword = (email, password) => {
     return new Promise((resolve, reject) => {
       axios
@@ -125,7 +158,7 @@ class JwtService extends FuseUtils.EventEmitter {
     });
   };
 
-  signInWithToken = () => { 
+  signInWithToken = () => {
     return new Promise((resolve, reject) => {
       axios
         .post(jwtServiceConfig.verifyToken, {

@@ -27,6 +27,8 @@ import { showMessage } from 'app/store/fuse/messageSlice';
 import { authRoles } from 'src/app/auth';
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
+import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
+import { useNavigate, useParams } from "react-router-dom";
 
 /**
  * Form Validation Schema
@@ -67,6 +69,7 @@ const roles = [
 ]
 
 function SignUpPage() {
+  const navigate = useNavigate();
   const [open, setOpen] = React.useState(false);
   const dispatch = useDispatch();
   const { control, formState, handleSubmit, reset } = useForm({
@@ -115,6 +118,31 @@ function SignUpPage() {
           }))
       });
   }
+
+  const handleContinueWithGoogle = () => {
+    setOpen(true)
+    jwtService
+      .googleAuthRequest()
+      .then(res => {
+        setOpen(false);
+        // navigate(res.authorization_url)
+        window.location.replace(res.authorization_url);
+      })
+      .catch(err => {
+        setOpen(false);
+
+        dispatch(
+          showMessage({
+            message: `Registration has been failed ${JSON.stringify(err.response.data)}`,//text or html
+            autoHideDuration: 6000,//ms
+            anchorOrigin: {
+              vertical: 'top',//top bottom
+              horizontal: 'right'//left center right
+            },
+            variant: 'error'//success error info warning null
+          }))
+      });
+  };
 
   return (
     <div className="flex flex-col sm:flex-row items-center md:items-start sm:justify-center md:justify-start flex-1 min-w-0">
@@ -290,6 +318,23 @@ function SignUpPage() {
               Or continue with
             </Typography>
             <div className="flex-auto mt-px border-t" />
+          </div>
+          <div className="flex items-center mt-32 space-x-16">
+            <Button variant="outlined" className="flex-auto" onClick={handleContinueWithGoogle}>
+              <FuseSvgIcon size={20} color="action">
+                feather:chrome
+              </FuseSvgIcon>
+            </Button>
+            <Button variant="outlined" className="flex-auto">
+              <FuseSvgIcon size={20} color="action">
+                feather:twitter
+              </FuseSvgIcon>
+            </Button>
+            <Button variant="outlined" className="flex-auto">
+              <FuseSvgIcon size={20} color="action">
+                feather:github
+              </FuseSvgIcon>
+            </Button>
           </div>
         </div>
       </Paper>

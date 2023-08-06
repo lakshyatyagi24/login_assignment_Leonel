@@ -54,6 +54,7 @@
         "prismjs": "1.28.0",
         "prop-types": "15.8.1",
         "qs": "6.10.3",
+        "query-string": "^8.1.0",
         "raw-loader": "4.0.2",
         "react": "18.1.0",
         "react-apexcharts": "1.4.0",
