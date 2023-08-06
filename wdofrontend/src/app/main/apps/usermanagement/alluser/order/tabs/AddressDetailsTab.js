@@ -25,20 +25,31 @@ const schema = yup.object().shape({
 });
 
 
-const defaultValues = {
-  street1: "",
-  landmark1: "",
-  city1: "",
-  state1: "",
-  zip_code1: "",
-  street2: "",
-  landmark2: "",
-  city2: "",
-  state2: "",
-  zip_code2: "",
-}
-
 const AddressDetailsTab = React.forwardRef((props, ref) => {
+  const defaultValues = {
+    street1: props.address_details.current_address.street,
+    landmark1: "",
+    city1: props.address_details.current_address.city,
+    state1: props.address_details.current_address.state,
+    zip_code1: "",
+    street2: props.address_details.permanent_address.street,
+    landmark2: "",
+    city2: props.address_details.permanent_address.city,
+    state2: props.address_details.permanent_address.state,
+    zip_code2: "",
+  }
+  // const defaultValues = {
+  //   street1: "",
+  //   landmark1: "",
+  //   city1: "",
+  //   state1: "",
+  //   zip_code1: "",
+  //   street2: "",
+  //   landmark2: "",
+  //   city2: "",
+  //   state2: "",
+  //   zip_code2: "",
+  // }
   const { control, formState, handleSubmit, reset } = useForm({
     mode: 'onChange',
     defaultValues,
