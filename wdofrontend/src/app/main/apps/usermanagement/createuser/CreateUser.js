@@ -1,5 +1,4 @@
 import FusePageSimple from '@fuse/core/FusePageSimple';
-import { useTheme } from '@mui/material/styles';
 import Hidden from '@mui/material/Hidden';
 import IconButton from '@mui/material/IconButton';
 import Stepper from '@mui/material/Stepper';
@@ -37,10 +36,11 @@ function CreateUser() {
       { order: 0, title: 'Personal Details', subtitle: 'Enter your Personal details' },
       { order: 1, title: 'Qualification Details', subtitle: 'Enter your Qualification details' },
       { order: 2, title: 'Address', subtitle: 'Enter your Address' },
-      { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' }
+      { order: 3, title: 'Industry Experience', subtitle: 'Enter your Industry experience' },
+      { order: 4, title: 'Document Upload', subtitle: 'Upload your Document' },
     ],
     currentStep: 1,
-    totalSteps: 4,
+    totalSteps: 5,
   });
 
   const dispatch = useDispatch();
@@ -51,6 +51,7 @@ function CreateUser() {
   const childComponentRef = useRef(null);
 
   if (userData.send == 1) {
+    console.log("userData-------", userData);
     jwtService
       .createCustomUser(userData)
       .then((user) => {
@@ -64,6 +65,14 @@ function CreateUser() {
             },
             variant: 'success'//success error info warning null
           }))
+        setData(prevState => ({
+          send: 0
+        }))
+
+        setSteps(prevState => ({
+          ...prevState,
+          currentStep: 1
+        }))
       })
       .catch((error) => {
         console.log(error);
@@ -77,15 +86,15 @@ function CreateUser() {
             },
             variant: 'error'//success error info warning null
           }))
-      });
-    setData(prevState => ({
-      send: 0
-    }))
+        setData(prevState => ({
+          send: 0
+        }))
 
-    setSteps(prevState => ({
-      ...prevState,
-      currentStep: 1
-    }))
+        setSteps(prevState => ({
+          ...prevState,
+          currentStep: 1
+        }))
+      });
   }
 
   function updateCurrentStep(index) {
@@ -124,18 +133,13 @@ function CreateUser() {
       case 4:
         setData(prevState => ({
           ...prevState,
-          industry_experience: data,
-          document_upload: {
-            "tenth_marksheet": "tenth_marksheet",
-            "twelfth_marksheet": "twelfth_marksheet",
-            "aadhar_card": "1111222233334444",
-            "alternative_card": "1111222233334444",
-            "bank_passbook": "Bank Passbook",
-            "graduation": "Diploma",
-            "post_graduation": "Post Graduation",
-            "experience_certificate": "Experience Certificate"
-          }
-          ,
+          industry_experience: data
+        }))
+        break;
+      case 5:
+        setData(prevState => ({
+          ...prevState,
+          document_upload: data,
           send: 1
         }))
         break;
@@ -169,6 +173,9 @@ function CreateUser() {
       break;
     case 4:
       mainContent = <Page4 ref={childComponentRef} />
+      break;
+    case 5:
+      mainContent = <Page5 ref={childComponentRef} />
       break;
     default:
       break;
@@ -207,7 +214,7 @@ function CreateUser() {
                   endIcon={<FuseSvgIcon>heroicons-outline:arrow-narrow-right</FuseSvgIcon>}
                   onClick={handleNext}
                 >
-                  {usersteps.currentStep == 4 ? "Submit" : "Next"}
+                  {usersteps.currentStep == 5 ? "Submit" : "Next"}
 
                 </Button>
               </ButtonGroup>

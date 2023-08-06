@@ -1,321 +1,134 @@
-import * as React from 'react';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { Controller, useForm, useFormContext } from 'react-hook-form';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import FuseSvgIcon from '@fuse/core/FuseSvgIcon';
 import { lighten } from '@mui/material/styles';
 import FuseUtils from '@fuse/utils';
-import clsx from 'clsx';
-import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
-import FormControl from '@mui/material/FormControl';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import InputLabel from '@mui/material/InputLabel';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import { Link } from 'react-router-dom';
-import * as yup from 'yup';
 import _ from '@lodash';
-import AvatarGroup from '@mui/material/AvatarGroup';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import FormHelperText from '@mui/material/FormHelperText';
 
-import Cookies from 'js-cookie';
+const category = [
+  "10th Marksheet",
+  "12th Marksheet",
+  "Aadhar Card",
+  "Alternative Govt. ID Card",
+  "Bank Passbook",
+  "Graduation/ Diploma (Optional)",
+  "Post Graduation (Optional)",
+  "Experience Certificate (Optional)",
+  "Salary Slip (Optional)"
+]
 
-/**
- * Form Validation Schema
- */
-const schema = yup.object().shape({
-    firstName: yup.string().required('You must enter First name'),
-    lastName: yup.string().required('You must enter Last name'),
-    email: yup.string().email('You must enter a valid email').required('You must enter a email'),
-    password: yup
-        .string()
-        .required('Please enter your password.')
-        .min(8, 'Password is too short - should be 8 chars minimum.'),
-    passwordConfirm: yup.string().oneOf([yup.ref('password'), null], 'Passwords must match'),
-    acceptTermsConditions: yup.boolean().oneOf([true], 'The terms and conditions must be accepted.'),
-});
+const Page5 = React.forwardRef((props, ref) => {
 
+  const [state, setState] = useState({
+    fileName: new Array(9).fill(""),
+    files: new Array(9).fill("")
+  })
 
-const defaultValues = {
-    name: '',
-    fatherName: '',
-    motherName: '',
-    email: '',
-    password: '',
-    passwordConfirm: '',
-    birthday: '',
-    phone: '',
-    alterPhone: '',
-    role: '10',
-    image: null,
-    acceptTermsConditions: false,
-};
-
-function Page4() {
-    const { control, formState, handleSubmit, reset } = useForm({
-        mode: 'onChange',
-        defaultValues,
-        resolver: yupResolver(schema),
-    });
-
-    const { isValid, dirtyFields, errors, setError } = formState;
-
-    function onSubmit({ firstName, lastName, password, email }) {
-        const csrfToken = Cookies.get('csrftoken');
-
-        console.log(firstName, lastName, password, email);
-
-        let formData = {
-            first_name: firstName,
-            last_name: lastName,
-            password: password,
-            re_password: password,
-            email: email
-        };
+  const childFunction = () => {
+    for (let i = 0; i < 5; i++) {
+      if (state.fileName[i] == "") {
+        return 0;
+      }
     }
+    const data = {
+      tenth_marksheet: state.files[0],
+      "twelfth_marksheet": state.files[1],
+      "aadhar_card": state.files[2],
+      "alternative_card": state.files[3],
+      "bank_passbook": state.files[4],
+      "graduation": state.files[5],
+      "post_graduation": state.files[6],
+      "experience_certificate": state.files[7],
+      "salary_slip": state.files[7]
+    };
 
-    const names = ["10th", "12th", "University Qualification", "Other Qualification (Optional)"]
+    return data;
+  }
 
-    return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={1}>
-                <Grid item xs={3}>
-                    <Controller
-                        name="images"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <Box
-                                sx={{
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'light'
-                                            ? lighten(theme.palette.background.default, 0.4)
-                                            : lighten(theme.palette.background.default, 0.02),
-                                }}
-                                component="label"
-                                htmlFor="button-file"
-                                className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
-                            >
-                                <input
-                                    accept="image/*"
-                                    className="hidden"
-                                    id="button-file"
-                                    type="file"
-                                    onChange={async (e) => {
-                                        function readFileAsync() {
-                                            return new Promise((resolve, reject) => {
-                                                const file = e.target.files[0];
-                                                if (!file) {
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
+  React.useImperativeHandle(ref, () => ({
+    childFunction
+  }));
 
-                                                reader.onload = () => {
-                                                    resolve({
-                                                        id: FuseUtils.generateGUID(),
-                                                        url: `data:${file.type};base64,${btoa(reader.result)}`,
-                                                        type: 'image',
-                                                    });
-                                                };
+  return (
+    <Box sx={{ flexGrow: 1 }} className="p-16 pb-64 sm:p-16 sm:pb-16 md:p-48 md:pb-16">
+      <Grid container spacing={1}>
+        {category.map((val, index) => {
+          return (<Grid item xs={4} key={index}>
+            <Box
+              sx={{
+                backgroundColor: (theme) =>
+                  theme.palette.mode === 'light'
+                    ? lighten(theme.palette.background.default, 0.4)
+                    : lighten(theme.palette.background.default, 0.02),
+              }}
+              component="label"
+              htmlFor={"button-file" + index}
+              className="productImageUpload flex flex-wrap items-center justify-center h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
+            >
+              <input
+                accept=".pdf,.doc,.docx"
+                className="hidden"
+                id={"button-file" + index}
+                type="file"
+                onChange={async (e) => {
+                  function readFileAsync() {
+                    return new Promise((resolve, reject) => {
+                      const file = e.target.files[0];
+                      if (!file) {
+                        return;
+                      }
+                      const reader = new FileReader();
 
-                                                reader.onerror = reject;
+                      reader.onload = () => {
+                        resolve({
+                          id: FuseUtils.generateGUID(),
+                          url: `data:${file.type};base64,${btoa(reader.result)}`,
+                          type: 'document',
+                          name: file.name
+                        });
+                      };
 
-                                                reader.readAsBinaryString(file);
-                                            });
-                                        }
+                      reader.onerror = reject;
 
-                                        const newImage = await readFileAsync();
+                      reader.readAsBinaryString(file);
+                    });
+                  }
+                  const newfile = await readFileAsync();
+                  const newFileName = state.fileName;
+                  newFileName[index] = newfile.name;
+                  const newFiles = state.files;
+                  newFiles[index] = newfile.url;
+                  setState((prevState) => ({
+                    ...prevState,
+                    fileName: newFileName,
+                    files: newFiles
+                  }));
+                }}
+              />
+              <Grid item xs={12}>
+                <Box className='flex flex-wrap items-center justify-center'>
+                  <h2>{val}</h2>
+                </Box>
+              </Grid>
+              <Grid item xs={12} className='flex flex-wrap items-center justify-center'>
+                <Box>
+                  <FuseSvgIcon size={36} color={state.fileName[index] ? "success" : "error"}>
+                    heroicons-outline:upload
+                  </FuseSvgIcon>
+                </Box>
+              </Grid>
+              <Grid item xs={12} className='flex flex-wrap items-center justify-center'>
+                <Box>
+                  <h3>{state.fileName[index]}</h3>
+                </Box>
+              </Grid>
+            </Box>
+          </Grid>)
+        })}
+      </Grid>
+    </Box>
+  );
+})
 
-                                        onChange([newImage, ...value]);
-                                    }}
-                                />
-                                <FuseSvgIcon size={32} color="action">
-                                    heroicons-outline:upload
-                                </FuseSvgIcon>
-                                <h3>10th Marksheet</h3>
-                            </Box>
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="images"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <Box
-                                sx={{
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'light'
-                                            ? lighten(theme.palette.background.default, 0.4)
-                                            : lighten(theme.palette.background.default, 0.02),
-                                }}
-                                component="label"
-                                htmlFor="button-file"
-                                className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
-                            >
-                                <input
-                                    accept="image/*"
-                                    className="hidden"
-                                    id="button-file"
-                                    type="file"
-                                    onChange={async (e) => {
-                                        function readFileAsync() {
-                                            return new Promise((resolve, reject) => {
-                                                const file = e.target.files[0];
-                                                if (!file) {
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
-
-                                                reader.onload = () => {
-                                                    resolve({
-                                                        id: FuseUtils.generateGUID(),
-                                                        url: `data:${file.type};base64,${btoa(reader.result)}`,
-                                                        type: 'image',
-                                                    });
-                                                };
-
-                                                reader.onerror = reject;
-
-                                                reader.readAsBinaryString(file);
-                                            });
-                                        }
-
-                                        const newImage = await readFileAsync();
-
-                                        onChange([newImage, ...value]);
-                                    }}
-                                />
-                                <FuseSvgIcon size={32} color="action">
-                                    heroicons-outline:upload
-                                </FuseSvgIcon>
-                                <h3>12th Marksheet</h3>
-                            </Box>
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="images"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <Box
-                                sx={{
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'light'
-                                            ? lighten(theme.palette.background.default, 0.4)
-                                            : lighten(theme.palette.background.default, 0.02),
-                                }}
-                                component="label"
-                                htmlFor="button-file"
-                                className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
-                            >
-                                <input
-                                    accept="image/*"
-                                    className="hidden"
-                                    id="button-file"
-                                    type="file"
-                                    onChange={async (e) => {
-                                        function readFileAsync() {
-                                            return new Promise((resolve, reject) => {
-                                                const file = e.target.files[0];
-                                                if (!file) {
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
-
-                                                reader.onload = () => {
-                                                    resolve({
-                                                        id: FuseUtils.generateGUID(),
-                                                        url: `data:${file.type};base64,${btoa(reader.result)}`,
-                                                        type: 'image',
-                                                    });
-                                                };
-
-                                                reader.onerror = reject;
-
-                                                reader.readAsBinaryString(file);
-                                            });
-                                        }
-
-                                        const newImage = await readFileAsync();
-
-                                        onChange([newImage, ...value]);
-                                    }}
-                                />
-                                <FuseSvgIcon size={32} color="action">
-                                    heroicons-outline:upload
-                                </FuseSvgIcon>
-                                <h3>Aadhar Card</h3>
-                            </Box>
-                        )}
-                    />
-                </Grid>
-                <Grid item xs={3}>
-                    <Controller
-                        name="images"
-                        control={control}
-                        render={({ field: { onChange, value } }) => (
-                            <Box
-                                sx={{
-                                    backgroundColor: (theme) =>
-                                        theme.palette.mode === 'light'
-                                            ? lighten(theme.palette.background.default, 0.4)
-                                            : lighten(theme.palette.background.default, 0.02),
-                                }}
-                                component="label"
-                                htmlFor="button-file"
-                                className="productImageUpload flex items-center justify-center relative w-128 h-128 rounded-16 mx-12 mb-24 overflow-hidden cursor-pointer shadow hover:shadow-lg"
-                            >
-                                <input
-                                    accept="image/*"
-                                    className="hidden"
-                                    id="button-file"
-                                    type="file"
-                                    onChange={async (e) => {
-                                        function readFileAsync() {
-                                            return new Promise((resolve, reject) => {
-                                                const file = e.target.files[0];
-                                                if (!file) {
-                                                    return;
-                                                }
-                                                const reader = new FileReader();
-
-                                                reader.onload = () => {
-                                                    resolve({
-                                                        id: FuseUtils.generateGUID(),
-                                                        url: `data:${file.type};base64,${btoa(reader.result)}`,
-                                                        type: 'image',
-                                                    });
-                                                };
-
-                                                reader.onerror = reject;
-
-                                                reader.readAsBinaryString(file);
-                                            });
-                                        }
-
-                                        const newImage = await readFileAsync();
-
-                                        onChange([newImage, ...value]);
-                                    }}
-                                />
-                                <FuseSvgIcon size={32} color="action">
-                                    heroicons-outline:upload
-                                </FuseSvgIcon>
-                                <h3>Bank Passbook</h3>
-                            </Box>
-                        )}
-                    />
-                </Grid>
-            </Grid>
-        </Box>
-    );
-}
-
-export default Page4;
+export default Page5;
