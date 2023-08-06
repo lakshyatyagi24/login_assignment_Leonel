@@ -47,15 +47,11 @@ def create_custom_user(request):
     industry_experience = data.get('industry_experience')
     document_upload = data.get('document_upload')
     print(document_upload)
-    print(data)
 
     personal_details = UserPersonalDetails.from_dict(data['personal_details'])
     qualification_details = UserQualification.from_dict(data['qualification_details'])
     address = UserAddress.from_dict(data['address'])
     document_upload = UserDocuments.from_dict(data['document_upload'])
-    print(personal_details)
-    print(qualification_details)
-    print(address)
 
     print(document_upload)
 

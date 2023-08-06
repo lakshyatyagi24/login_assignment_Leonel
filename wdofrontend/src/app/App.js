@@ -23,7 +23,7 @@ import axios from 'axios';
 
 axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 // axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-// axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/x-www-form-urlencoded';
 
 const emotionCacheOptions = {
   rtl: {

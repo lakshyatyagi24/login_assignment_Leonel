@@ -114,7 +114,6 @@ class Qualification(models.Model):
 
     @classmethod
     def from_dict(cls, qualification_dict):
-        print(qualification_dict)
         return cls(
             board_name=qualification_dict.get('board_name'),
             year=qualification_dict.get('year'),
